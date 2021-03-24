@@ -29,7 +29,8 @@ export default [
   'address',
   'ansi-html',
   'body-parser',
-  'chalk',
+  // remove chalk in case of different version
+  // 'chalk',
   'cacache',
   'cheerio',
   'cliui',
