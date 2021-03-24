@@ -8,6 +8,7 @@
     "deps"
   ],
   "scripts": {
+    "install": "yarn install --registry=https://registry.npm.taobao.org/",
     "build": "ts-node scripts/packModules"
   },
   "devDependencies": {
