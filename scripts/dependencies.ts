@@ -1,6 +1,6 @@
 export default [
   // babel
-  /* '@babel/preset-env',
+  '@babel/preset-env',
   '@babel/preset-react',
   '@babel/preset-typescript',
   'babel-jest',
@@ -73,7 +73,7 @@ export default [
 
   'webpack-chain',
   'prettier',
-  'ejs', */
+  'ejs',
   'globby',
   // compilers
   // 'less',
