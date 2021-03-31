@@ -1,10 +1,10 @@
 export default [
   // babel
-  '@babel/preset-env',
+  /* '@babel/preset-env',
   '@babel/preset-react',
-  '@babel/preset-typescript',
+  '@babel/preset-typescript', */
   'babel-jest',
-  '@babel/core',
+  /* '@babel/core',
   '@babel/types',
   '@babel/parser',
   '@babel/traverse',
@@ -72,6 +72,9 @@ export default [
   'postcss-plugin-rpx2vw',
 
   'webpack-chain',
+  'prettier',
+  'ejs',
+  'globby', */
   // compilers
   // 'less',
   // 'sass',

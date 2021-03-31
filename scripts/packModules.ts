@@ -1,7 +1,9 @@
 import * as path from 'path';
 import * as fs from 'fs-extra';
 import * as ncc from '@vercel/ncc';
+import * as globby from 'globby';
 import dependencies from './dependencies';
+import bundleDts from './bundleDts';
 
 const DEPS_FOLDER = 'deps';
 const additionalExternals = {
@@ -31,6 +33,21 @@ async function bundlePackage(packageName, opts = {}) {
   const packageFolder = path.join(__dirname, '..' , DEPS_FOLDER, packageName);
   fs.ensureDirSync(packageFolder);
   fs.writeFileSync(path.join(packageFolder, 'index.js'), code, 'utf-8');
+
+  // check dts file
+  // check field type from package.json
+  try {
+    const resolveFolder = path.dirname(require.resolve(packageName));
+    const files = globby.sync('**/*.d.ts', {
+      cwd: resolveFolder,
+    });
+    // glob dts
+    files.forEach((file) => {
+      bundleDts({ dtsFilePath: path.join(resolveFolder, file), packageFolder: path.join(__dirname, '..' , DEPS_FOLDER), packageName });
+    });
+  } catch (err) {
+    console.log('fail to get package info')
+  }
 }
 
 // clear folder before bundle package
