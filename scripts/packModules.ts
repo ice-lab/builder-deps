@@ -3,7 +3,7 @@ import * as fs from 'fs-extra';
 import * as ncc from '@vercel/ncc';
 import * as globby from 'globby';
 import dependencies from './dependencies';
-import bundleDts from './bundleDts';
+import { analyzePackageDts } from './analyzeDts';
 
 const DEPS_FOLDER = 'deps';
 const additionalExternals = {
@@ -37,14 +37,7 @@ async function bundlePackage(packageName, opts = {}) {
   // check dts file
   // check field type from package.json
   try {
-    const resolveFolder = path.dirname(require.resolve(packageName));
-    const files = globby.sync('**/*.d.ts', {
-      cwd: resolveFolder,
-    });
-    // glob dts
-    files.forEach((file) => {
-      bundleDts({ dtsFilePath: path.join(resolveFolder, file), packageFolder: path.join(__dirname, '..' , DEPS_FOLDER), packageName });
-    });
+    analyzePackageDts({moduleName: packageName, outputFolder: path.join(__dirname, '..' , DEPS_FOLDER)});
   } catch (err) {
     console.log('fail to get package info')
   }
