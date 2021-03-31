@@ -34,8 +34,7 @@ async function bundlePackage(packageName: string, opts = {}) {
   fs.ensureDirSync(packageFolder);
   fs.writeFileSync(path.join(packageFolder, 'index.js'), code, 'utf-8');
 
-  // check dts file
-  // check field type from package.json
+  // pack dts file
   try {
     analyzePackageDts({moduleName: packageName, outputFolder: path.join(__dirname, '..' , DEPS_FOLDER)});
   } catch (err) {
