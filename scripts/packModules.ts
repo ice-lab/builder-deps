@@ -25,7 +25,7 @@ const additionalExternals = {
   },
 };
 
-async function bundlePackage(packageName, opts = {}) {
+async function bundlePackage(packageName: string, opts = {}) {
   const packagePath = require.resolve(packageName);
   const { code } = await ncc(packagePath ,{
     ...opts,
@@ -39,7 +39,7 @@ async function bundlePackage(packageName, opts = {}) {
   try {
     analyzePackageDts({moduleName: packageName, outputFolder: path.join(__dirname, '..' , DEPS_FOLDER)});
   } catch (err) {
-    console.log('fail to get package info')
+    console.log(`[Error] fail to get package info of ${packageName}`, err);
   }
 }
 
