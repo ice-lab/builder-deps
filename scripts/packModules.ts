@@ -2,6 +2,7 @@ import * as path from 'path';
 import * as fs from 'fs-extra';
 import * as ncc from '@vercel/ncc';
 import dependencies from './dependencies';
+import { analyzePackageDts } from './analyzeDts';
 
 const DEPS_FOLDER = 'deps';
 const additionalExternals = {
@@ -23,7 +24,7 @@ const additionalExternals = {
   },
 };
 
-async function bundlePackage(packageName, opts = {}) {
+async function bundlePackage(packageName: string, opts = {}) {
   const packagePath = require.resolve(packageName);
   const { code } = await ncc(packagePath ,{
     ...opts,
@@ -31,6 +32,13 @@ async function bundlePackage(packageName, opts = {}) {
   const packageFolder = path.join(__dirname, '..' , DEPS_FOLDER, packageName);
   fs.ensureDirSync(packageFolder);
   fs.writeFileSync(path.join(packageFolder, 'index.js'), code, 'utf-8');
+
+  // pack dts file
+  try {
+    analyzePackageDts({moduleName: packageName, outputFolder: path.join(__dirname, '..' , DEPS_FOLDER)});
+  } catch (err) {
+    console.log(`[Error] fail to pack dts files of ${packageName}`, err);
+  }
 }
 
 // clear folder before bundle package

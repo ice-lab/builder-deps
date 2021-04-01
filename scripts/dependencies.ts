@@ -72,6 +72,9 @@ export default [
   'postcss-plugin-rpx2vw',
 
   'webpack-chain',
+  'prettier',
+  'ejs',
+  'globby',
   // compilers
   // 'less',
   // 'sass',
