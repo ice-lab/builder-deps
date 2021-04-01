@@ -1,7 +1,6 @@
 import * as path from 'path';
 import * as fs from 'fs-extra';
 import * as ncc from '@vercel/ncc';
-import * as globby from 'globby';
 import dependencies from './dependencies';
 import { analyzePackageDts } from './analyzeDts';
 
