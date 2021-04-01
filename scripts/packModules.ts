@@ -37,7 +37,7 @@ async function bundlePackage(packageName: string, opts = {}) {
   try {
     analyzePackageDts({moduleName: packageName, outputFolder: path.join(__dirname, '..' , DEPS_FOLDER)});
   } catch (err) {
-    console.log(`[Error] fail to get package info of ${packageName}`, err);
+    console.log(`[Error] fail to pack dts files of ${packageName}`, err);
   }
 }
 
