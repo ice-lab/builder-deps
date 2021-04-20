@@ -716,6 +716,7 @@ export async function ncc(task) {
       'ncc_terser_webpack_plugin',
       'ncc_time_fix_plugin',
       'ncc_debug',
+      'ncc_set_value',
       'ncc_webpack_filter_warnings_plugin',
       'ncc_webpack_simple_progress_plugin',
       'ncc_ejs',
