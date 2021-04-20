@@ -427,7 +427,7 @@ export async function ncc_serialize_javascript(task, opts) {
     .target('deps/serialize-javascript');
 }
 
-externals['sockjs'] = '@builder/pack/deps/sockjs';
+/* externals['sockjs'] = '@builder/pack/deps/sockjs';
 export async function ncc_sockjs(task, opts) {
   await task
     .source(
@@ -435,7 +435,7 @@ export async function ncc_sockjs(task, opts) {
     )
     .ncc({ packageName: 'sockjs', externals })
     .target('deps/sockjs');
-}
+} */
 
 // webpack 4 打包时不能 external source-map，应该是用了不同版本
 // externals['source-map'] = '@builder/pack/deps/source-map';
@@ -448,7 +448,7 @@ export async function ncc_source_map(task, opts) {
     .target('deps/source-map');
 }
 
-externals['spdy'] = '@builder/pack/deps/spdy';
+/* externals['spdy'] = '@builder/pack/deps/spdy';
 export async function ncc_spdy(task, opts) {
   await task
     .source(
@@ -456,68 +456,7 @@ export async function ncc_spdy(task, opts) {
     )
     .ncc({ packageName: 'spdy', externals })
     .target('deps/spdy');
-}
-
-externals['speed-measure-webpack-plugin'] = '@builder/pack/deps/speed-measure-webpack-plugin';
-export async function ncc_speed_measure_webpack_plugin(task, opts) {
-  await task
-    .source(
-      opts.src || relative(__dirname, require.resolve('speed-measure-webpack-plugin'))
-    )
-    .ncc({ packageName: 'speed-measure-webpack-plugin', externals })
-    .target('deps/speed-measure-webpack-plugin');
-}
-
-externals['stats-webpack-plugin'] = '@builder/pack/deps/stats-webpack-plugin';
-export async function ncc_stats_webpack_plugin(task, opts) {
-  await task
-    .source(
-      opts.src || relative(__dirname, require.resolve('stats-webpack-plugin'))
-    )
-    .ncc({ packageName: 'stats-webpack-plugin', externals })
-    .target('deps/stats-webpack-plugin');
-}
-
-externals['style-loader'] = '@builder/pack/deps/style-loader';
-export async function ncc_style_loader(task, opts) {
-  await task
-    .source(
-      opts.src || relative(__dirname, require.resolve('style-loader'))
-    )
-    .ncc({ packageName: 'style-loader', externals })
-    .target('deps/style-loader');
-}
-
-// do not external!
-// externals['tapable'] = '@builder/pack/deps/tapable';
-export async function ncc_tapable(task, opts) {
-  await task
-    .source(
-      opts.src || relative(__dirname, require.resolve('tapable'))
-    )
-    .ncc({ packageName: 'tapable', externals })
-    .target('deps/tapable');
-}
-
-externals['yargs-parser'] = '@builder/pack/deps/yargs-parser';
-export async function ncc_yargs_parser(task, opts) {
-  await task
-    .source(
-      opts.src || relative(__dirname, require.resolve('yargs-parser'))
-    )
-    .ncc({ packageName: 'yargs-parser', externals })
-    .target('deps/yargs-parser');
-}
-
-externals['umi-webpack-bundle-analyzer'] = '@builder/pack/deps/umi-webpack-bundle-analyzer';
-export async function ncc_umi_webpack_bundle_analyzer(task, opts) {
-  await task
-    .source(
-      opts.src || relative(__dirname, require.resolve('umi-webpack-bundle-analyzer'))
-    )
-    .ncc({ packageName: 'umi-webpack-bundle-analyzer', externals })
-    .target('deps/umi-webpack-bundle-analyzer');
-}
+} */
 
 externals['url-loader'] = '@builder/pack/deps/url-loader';
 export async function ncc_url_loader(task, opts) {
@@ -587,26 +526,6 @@ export async function ncc_prettier(task, opts) {
     )
     .ncc({ packageName: 'prettier', externals })
     .target('deps/prettier');
-}
-
-externals['webpack-dev-middleware'] = '@builder/pack/deps/webpack-dev-middleware';
-export async function ncc_webpack_dev_middleware(task, opts) {
-  await task
-    .source(
-      opts.src || relative(__dirname, require.resolve('webpack-dev-middleware'))
-    )
-    .ncc({ packageName: 'webpack-dev-middleware', externals })
-    .target('deps/webpack-dev-middleware');
-}
-
-externals['webpack-manifest-plugin'] = '@builder/pack/deps/webpack-manifest-plugin';
-export async function ncc_webpack_manifest_plugin(task, opts) {
-  await task
-    .source(
-      opts.src || relative(__dirname, require.resolve('webpack-manifest-plugin'))
-    )
-    .ncc({ packageName: 'webpack-manifest-plugin', externals })
-    .target('deps/webpack-manifest-plugin');
 }
 
 // externals['webpack-sources'] = '@builder/pack/deps/webpack-sources';
@@ -686,16 +605,6 @@ export async function ncc_babel_loader(task, opts) {
     .target('deps/babel-loader');
 }
 
-externals['ts-loader'] = '@builder/pack/deps/ts-loader';
-export async function ncc_ts_loader(task, opts) {
-  await task
-    .source(
-      opts.src || relative(__dirname, require.resolve('ts-loader'))
-    )
-    .ncc({ packageName: 'ts-loader', externals: {...externals, typescript: 'typescript'}})
-    .target('deps/ts-loader');
-}
-
 export async function ncc(task) {
   await task
     .clear('compiled')
@@ -709,6 +618,9 @@ export async function ncc(task) {
       'ncc_cheerio',
       'ncc_cliui',
       'ncc_color',
+      // 'ncc_sockjs',
+      'ncc_source_map',
+      // 'ncc_spdy',
       'ncc_copy_webpack_plugin',
       'ncc_mkcert',
       'ncc_case_sensitive_paths_webpack_plugin',
@@ -727,25 +639,20 @@ export async function ncc(task) {
       'ncc_webpack_bundle_analyzer',
       'ncc_eslint_loader',
       'ncc_esbuild_loader',
-      'ncc_file_loader',
-      'ncc_less_loader',
       'ncc_sass_loader',
-      'ncc_ts_loader',
       'ncc_postcss_loader',
       'ncc_postcss_preset_env',
       'ncc_postcss_safe_parser',
       'ncc_postcss_plugin_rpx2vw',
       'ncc_prettier',
-      // 'ncc_fork_ts_checker_webpack_plugin_bundle',
-      // 'ncc_fork_ts_checker_webpack_plugin_bundle_package',
       'ncc_friendly_errors_webpack_plugin',
       'ncc_globby',
       'ncc_loader_utils',
       'ncc_lodash',
       'ncc_less_loader',
-      'ncc_optimize_css_assets_webpack_plugin',
       'ncc_url_loader',
       'ncc_schema_utils3',
+      'ncc_serialize_javascript',
       'ncc_webpack_chain',
       'ncc_webpack_sources',
       'ncc_webpack_sources2',
@@ -754,6 +661,8 @@ export async function ncc(task) {
       'ncc_webpack_bundle5',
       'ncc_webpack_bundle_packages',
       'ncc_babel_loader',
+      'ncc_fork_ts_checker_webpack_plugin_bundle',
+      'ncc_fork_ts_checker_webpack_plugin_bundle_package',
     ]);
 }
 
