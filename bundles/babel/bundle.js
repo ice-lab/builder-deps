@@ -72,6 +72,10 @@ function pluginTransformRuntime() {
   return require('@babel/plugin-transform-runtime')
 }
 
+function pluginProposalClassProperties() {
+  return require('@babel/plugin-proposal-class-properties')
+}
+
 function presetEnv() {
   return require('@babel/preset-env')
 }
@@ -92,6 +96,7 @@ module.exports = {
   pluginProposalExportDefaultFrom,
   pluginProposalLogicalAssignmentOperators,
   pluginProposalNullishCoalescingOperator,
+  pluginProposalClassProperties,
   pluginProposalThrowExpressions,
   pluginSyntaxImportMeta,
   pluginProposalPipelineOperator,
