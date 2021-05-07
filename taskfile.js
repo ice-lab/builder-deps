@@ -65,7 +65,7 @@ export async function ncc_babel_bundle(task, opts) {
     .source(opts.src || 'bundles/babel/bundle.js')
     .ncc({
       packageName: '@babel/core',
-      bundleName: 'babel',
+      bundleName: '@babel',
       externals: bundleExternals,
       minify: false,
     })
@@ -73,14 +73,14 @@ export async function ncc_babel_bundle(task, opts) {
 }
 
 const babelBundlePackages = {
-  '@babel/code-frame': '@builder/pack/deps/babel/code-frame',
-  '@babel/core': '@builder/pack/deps/babel/core',
-  '@babel/parser': '@builder/pack/deps/babel/parser',
-  '@babel/traverse': '@builder/pack/deps/babel/traverse',
-  '@babel/types': '@builder/pack/deps/babel/types',
-  '@babel/preset-env': '@builder/pack/deps/babel/preset-env',
-  '@babel/preset-react': '@builder/pack/deps/babel/preset-react',
-  '@babel/preset-typescript': '@builder/pack/deps/babel/preset-typescript',
+  '@babel/code-frame': '@builder/pack/deps/@babel/code-frame',
+  '@babel/core': '@builder/pack/deps/@babel/core',
+  '@babel/parser': '@builder/pack/deps/@babel/parser',
+  '@babel/traverse': '@builder/pack/deps/@babel/traverse',
+  '@babel/types': '@builder/pack/deps/@babel/types',
+  '@babel/preset-env': '@builder/pack/deps/@babel/preset-env',
+  '@babel/preset-react': '@builder/pack/deps/@babel/preset-react',
+  '@babel/preset-typescript': '@builder/pack/deps/@babel/preset-typescript',
 }
 
 Object.assign(externals, babelBundlePackages);
@@ -448,26 +448,6 @@ export async function ncc_source_map(task, opts) {
     .target('deps/source-map');
 }
 
-/* externals['spdy'] = '@builder/pack/deps/spdy';
-export async function ncc_spdy(task, opts) {
-  await task
-    .source(
-      opts.src || relative(__dirname, require.resolve('spdy'))
-    )
-    .ncc({ packageName: 'spdy', externals })
-    .target('deps/spdy');
-} */
-
-externals['url-loader'] = '@builder/pack/deps/url-loader';
-export async function ncc_url_loader(task, opts) {
-  await task
-    .source(
-      opts.src || relative(__dirname, require.resolve('url-loader'))
-    )
-    .ncc({ packageName: 'url-loader', externals })
-    .target('deps/url-loader');
-}
-
 externals['postcss-loader'] = '@builder/pack/deps/postcss-loader';
 export async function ncc_postcss_loader(task, opts) {
   await task
@@ -548,7 +528,7 @@ export async function ncc_webpack_sources2(task, opts) {
     .target('deps/webpack-sources2')
 }
 
-externals['webpack'] = '@builder/pack/deps/webpack/webpack';
+externals['webpack'] = '@builder/pack/deps/webpack/webpack-lib';
 export async function ncc_webpack_bundle4(task, opts) {
   await task
     .source(opts.src || 'bundles/webpack/bundle4.js')
@@ -650,19 +630,18 @@ export async function ncc(task) {
       'ncc_loader_utils',
       'ncc_lodash',
       'ncc_less_loader',
-      'ncc_url_loader',
       'ncc_schema_utils3',
       'ncc_serialize_javascript',
       'ncc_webpack_chain',
       'ncc_webpack_sources',
       'ncc_webpack_sources2',
       'ncc_webpack_bundle_hot',
-      'ncc_webpack_bundle4',
+      // 'ncc_webpack_bundle4',
       'ncc_webpack_bundle5',
       'ncc_webpack_bundle_packages',
       'ncc_babel_loader',
-      'ncc_fork_ts_checker_webpack_plugin_bundle',
-      'ncc_fork_ts_checker_webpack_plugin_bundle_package',
+      // 'ncc_fork_ts_checker_webpack_plugin_bundle',
+      // 'ncc_fork_ts_checker_webpack_plugin_bundle_package',
     ]);
 }
 

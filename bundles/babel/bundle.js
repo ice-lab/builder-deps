@@ -8,10 +8,6 @@ function core() {
   return require('@babel/core')
 }
 
-function pluginProposalClassProperties() {
-  return require('@babel/plugin-proposal-class-properties')
-}
-
 function pluginProposalDecorators() {
   return require('@babel/plugin-proposal-decorators')
 }
@@ -60,6 +56,10 @@ function pluginProposalPipelineOperator() {
   return require('@babel/plugin-proposal-pipeline-operator')
 }
 
+function pluginProposalThrowExpressions() {
+  return require('@babel/plugin-proposal-throw-expressions')
+}
+
 function pluginSyntaxDynamicImport() {
   return require('@babel/plugin-syntax-dynamic-import')
 }
@@ -87,12 +87,12 @@ function presetTypescript() {
 module.exports = {
   codeFrame,
   core,
-  pluginProposalClassProperties,
   pluginProposalDecorators,
   pluginProposalDoExpressions,
   pluginProposalExportDefaultFrom,
   pluginProposalLogicalAssignmentOperators,
   pluginProposalNullishCoalescingOperator,
+  pluginProposalThrowExpressions,
   pluginSyntaxImportMeta,
   pluginProposalPipelineOperator,
   pluginProposalOptionalChaining,
