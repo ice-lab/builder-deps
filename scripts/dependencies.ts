@@ -64,7 +64,7 @@ export default [
   'less-loader',
   'sass-loader',
   'babel-loader',
-  'ts-loader',
+  // 'ts-loader',
   'url-loader',
   'postcss-loader',
   'postcss-preset-env',

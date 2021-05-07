@@ -636,7 +636,7 @@ export async function ncc(task) {
       'ncc_webpack_sources',
       'ncc_webpack_sources2',
       'ncc_webpack_bundle_hot',
-      // 'ncc_webpack_bundle4',
+      'ncc_webpack_bundle4',
       'ncc_webpack_bundle5',
       'ncc_webpack_bundle_packages',
       'ncc_babel_loader',
