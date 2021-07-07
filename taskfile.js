@@ -488,7 +488,7 @@ export async function ncc_postcss_preset_env(task, opts) {
     .source(
       opts.src || relative(__dirname, require.resolve('postcss-preset-env'))
     )
-    .ncc({ packageName: 'postcss-preset-env', externals })
+    .ncc({ packageName: 'postcss-preset-env', externals, minify: false })
     .target('deps/postcss-preset-env')
 }
 
@@ -528,7 +528,7 @@ export async function ncc_prettier(task, opts) {
     .source(
       opts.src || relative(__dirname, require.resolve('prettier'))
     )
-    .ncc({ packageName: 'prettier', externals })
+    .ncc({ packageName: 'prettier', externals, minify: false })
     .target('deps/prettier');
 }
 
