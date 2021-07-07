@@ -21,7 +21,7 @@ module.exports = function (task) {
     }
     let precompiled = options.precompiled !== false
     delete options.precompiled
-
+    const outputDir = options.dir || '';
     return ncc(join(__dirname, file.dir, file.base), {
       filename: file.base,
       // minify: options.minify === false ? false : true,
@@ -43,7 +43,8 @@ module.exports = function (task) {
           options.packageName,
           file.base,
           options.bundleName,
-          precompiled
+          precompiled,
+          outputDir,
         )
       }
 
@@ -57,7 +58,7 @@ module.exports = function (task) {
 // This function writes a minimal `package.json` file for a compiled package.
 // It defines `name`, `main`, `author`, and `license`. It also defines `types`.
 // n.b. types intended for development usage only.
-function writePackageManifest(packageName, main, bundleName, precompiled) {
+function writePackageManifest(packageName, main, bundleName, precompiled, outputDir) {
   const packagePath = bundleRequire.resolve(packageName + '/package.json')
   let { name, author, license } = require(packagePath)
 
@@ -93,7 +94,7 @@ function writePackageManifest(packageName, main, bundleName, precompiled) {
       JSON.stringify(
         Object.assign(
           {},
-          { name, main: `${basename(main, '.' + extname(main))}` },
+          { name, main: `${outputDir ? `${outputDir}/` : ''}${basename(main, '.' + extname(main))}` },
           author ? { author } : undefined,
           license ? { license } : undefined
         )
