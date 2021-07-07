@@ -1,5 +1,6 @@
 // inspired by https://github.com/vercel/next.js/blob/canary/packages/next/taskfile.js
-const { relative, basename, resolve, dirname } = require('path')
+const fs = require('fs-extra');
+const { relative, basename, resolve, dirname, join } = require('path')
 const { Module } = require('module')
 
 // Note:
@@ -36,6 +37,16 @@ const externals = {
   chokidar: 'chokidar',
   'jest-worker': 'jest-worker',
 };
+
+externals['camelcase'] = '@builder/pack/deps/camelcase';
+export async function ncc_camelcase(task, opts) {
+  await task
+    .source(
+      opts.src || relative(__dirname, require.resolve('camelcase'))
+    )
+    .ncc({ packageName: 'camelcase', externals })
+    .target('deps/camelcase');
+}
 
 externals['address'] = '@builder/pack/deps/address';
 export async function ncc_address(task, opts) {
@@ -281,24 +292,25 @@ export async function ncc_lodash(task, opts) {
     .target('deps/lodash');
 }
 
-externals['mkcert'] = '@builder/pack/deps/mkcert';
-export async function ncc_mkcert(task, opts) {
+externals['css-declaration-sorter'] = '@builder/pack/deps/css-declaration-sorter';
+export async function ncc_css_declaration_sorter(task, opts) {
+  const dir = 'lib';
   await task
-    .source(
-      opts.src || relative(__dirname, require.resolve('mkcert'))
-    )
-    .ncc({ packageName: 'mkcert', externals })
-    .target('deps/mkcert');
+    .source(opts.src || relative(__dirname, require.resolve('css-declaration-sorter')))
+    .ncc({ packageName: 'css-declaration-sorter', externals, dir })
+    .target(`deps/css-declaration-sorter/${dir}`);
+  const packageFolder = dirname(require.resolve('css-declaration-sorter/package.json'))
+  fs.copySync(join(packageFolder, 'orders'), join(__dirname, 'deps/css-declaration-sorter/orders'));
 }
 
-externals['optimize-css-assets-webpack-plugin'] = '@builder/pack/deps/optimize-css-assets-webpack-plugin';
-export async function ncc_optimize_css_assets_webpack_plugin(task, opts) {
+externals['css-minimizer-webpack-plugin'] = '@builder/pack/deps/css-minimizer-webpack-plugin';
+export async function ncc_css_minimizer_webpack_plugin(task, opts) {
   await task
     .source(
-      opts.src || relative(__dirname, require.resolve('optimize-css-assets-webpack-plugin'))
+      opts.src || relative(__dirname, require.resolve('css-minimizer-webpack-plugin'))
     )
-    .ncc({ packageName: 'optimize-css-assets-webpack-plugin', externals })
-    .target('deps/optimize-css-assets-webpack-plugin');
+    .ncc({ packageName: 'css-minimizer-webpack-plugin', externals })
+    .target('deps/css-minimizer-webpack-plugin');
 }
 
 externals['case-sensitive-paths-webpack-plugin'] = '@builder/pack/deps/case-sensitive-paths-webpack-plugin';
@@ -361,6 +373,16 @@ export async function ncc_add_asset_html_webpack_plugin(task, opts) {
     .target('deps/add-asset-html-webpack-plugin');
 }
 
+externals['html-webpack-plugin'] = '@builder/pack/deps/html-webpack-plugin';
+export async function ncc_html_webpack_plugin(task, opts) {
+  await task
+    .source(
+      opts.src || relative(__dirname, require.resolve('html-webpack-plugin'))
+    )
+    .ncc({ packageName: 'html-webpack-plugin', externals })
+    .target('deps/html-webpack-plugin');
+}
+
 externals['eslint-reporting-webpack-plugin'] = '@builder/pack/deps/eslint-reporting-webpack-plugin';
 export async function ncc_eslint_reporting_webpack_plugin(task, opts) {
   await task
@@ -376,12 +398,14 @@ export async function ncc_eslint_reporting_webpack_plugin(task, opts) {
 
 externals['webpack-bundle-analyzer'] = '@builder/pack/deps/webpack-bundle-analyzer';
 export async function ncc_webpack_bundle_analyzer(task, opts) {
+  const assetsFolder = join(dirname(require.resolve('webpack-bundle-analyzer/package.json')), 'public');
   await task
     .source(
       opts.src || relative(__dirname, require.resolve('webpack-bundle-analyzer'))
     )
     .ncc({ packageName: 'webpack-bundle-analyzer', externals })
     .target('deps/webpack-bundle-analyzer');
+  fs.copySync(assetsFolder, join(__dirname, 'deps/webpack-bundle-analyzer/public'));
 }
 
 externals['eslint-loader'] = '@builder/pack/deps/eslint-loader';
@@ -585,6 +609,16 @@ export async function ncc_babel_loader(task, opts) {
     .target('deps/babel-loader');
 }
 
+externals['babel-jest'] = '@builder/pack/deps/babel-jest';
+export async function ncc_babel_jest(task, opts) {
+  await task
+    .source(
+      opts.src || relative(__dirname, require.resolve('babel-jest'))
+    )
+    .ncc({ packageName: 'babel-jest', externals })
+    .target('deps/babel-jest');
+}
+
 export async function ncc(task) {
   await task
     .clear('compiled')
@@ -598,11 +632,11 @@ export async function ncc(task) {
       'ncc_cheerio',
       'ncc_cliui',
       'ncc_color',
+      'ncc_camelcase',
       // 'ncc_sockjs',
       'ncc_source_map',
       // 'ncc_spdy',
       'ncc_copy_webpack_plugin',
-      'ncc_mkcert',
       'ncc_case_sensitive_paths_webpack_plugin',
       'ncc_css_loader',
       'ncc_terser_webpack_plugin',
@@ -612,8 +646,10 @@ export async function ncc(task) {
       'ncc_webpack_filter_warnings_plugin',
       'ncc_webpack_simple_progress_plugin',
       'ncc_ejs',
-      'ncc_optimize_css_assets_webpack_plugin',
+      'ncc_css_minimizer_webpack_plugin',
+      'ncc_css_declaration_sorter',
       'ncc_add_asset_html_webpack_plugin',
+      'ncc_html_webpack_plugin',
       'ncc_file_loader',
       'ncc_eslint_reporting_webpack_plugin',
       'ncc_webpack_bundle_analyzer',
@@ -640,6 +676,8 @@ export async function ncc(task) {
       'ncc_webpack_bundle5',
       'ncc_webpack_bundle_packages',
       'ncc_babel_loader',
+      'ncc_babel_jest',
+      'ncc_css_declaration_sorter',
       // 'ncc_fork_ts_checker_webpack_plugin_bundle',
       // 'ncc_fork_ts_checker_webpack_plugin_bundle_package',
     ]);
