@@ -19,6 +19,7 @@ module.exports = function () {
     Template: require('webpack5/lib/Template'),
     FetchCompileAsyncWasmPlugin: require('webpack5/lib/web/FetchCompileAsyncWasmPlugin'),
     FetchCompileWasmPlugin: require('webpack5/lib/web/FetchCompileWasmPlugin'),
+    ProgressPlugin: require('webpack5/lib/ProgressPlugin'),
     // FetchCompileWasmTemplatePlugin: require('webpack5/lib/web/FetchCompileWasmTemplatePlugin'),
     WebWorkerTemplatePlugin: require('webpack5/lib/webworker/WebWorkerTemplatePlugin'),
     BasicEvaluatedExpression: require('webpack5/lib/javascript/BasicEvaluatedExpression'),
