@@ -68,6 +68,36 @@ export async function ncc_ansi_html(task, opts) {
     .target('deps/ansi-html');
 }
 
+externals['pretty-error'] = '@builder/pack/deps/pretty-error';
+export async function ncc_pretty_error(task, opts) {
+  await task
+    .source(
+      opts.src || relative(__dirname, require.resolve('pretty-error'))
+    )
+    .ncc({ packageName: 'pretty-error', externals })
+    .target('deps/pretty-error');
+}
+
+export async function ncc_tapable(task, opts) {
+  await task
+    .source(
+      opts.src || relative(__dirname, require.resolve('tapable'))
+    )
+    .ncc({ packageName: 'tapable', externals })
+    .target('deps/tapable');
+}
+
+externals['html-minifier-terser'] = '@builder/pack/deps/html-minifier-terser';
+export async function ncc_html_minifier_terser(task, opts) {
+  await task
+    .source(
+      opts.src || relative(__dirname, require.resolve('html-minifier-terser'))
+    )
+    .ncc({ packageName: 'html-minifier-terser', externals })
+    .target('deps/html-minifier-terser');
+}
+
+
 export async function ncc_babel_bundle(task, opts) {
   const bundleExternals = { ...externals }
   for (const pkg of Object.keys(babelBundlePackages))
@@ -303,6 +333,68 @@ export async function ncc_css_declaration_sorter(task, opts) {
   fs.copySync(join(packageFolder, 'orders'), join(__dirname, 'deps/css-declaration-sorter/orders'));
 }
 
+externals['mini-css-extract-plugin'] = '@builder/pack/deps/mini-css-extract-plugin';
+export async function ncc_mini_css_extract_plugin(task, opts) {
+  await task
+    .source(
+      relative(
+        __dirname,
+        resolve(require.resolve('mini-css-extract-plugin'), '../index.js')
+      )
+    )
+    .ncc({
+      externals: {
+        ...externals,
+        './index': './index.js',
+        'schema-utils': '@builder/pack/deps/schema-utils3',
+        'webpack/lib/util/identifier': '@builder/pack/deps/webpack/identifier',
+      },
+    })
+    .target('deps/mini-css-extract-plugin')
+  await task
+    .source(
+      opts.src ||
+        relative(__dirname, require.resolve('mini-css-extract-plugin'))
+    )
+    .ncc({
+      packageName: 'mini-css-extract-plugin',
+      externals: {
+        ...externals,
+        './index': './index.js',
+        'schema-utils': '@builder/pack/deps/schema-utils3',
+        'webpack/lib/util/identifier': '@builder/pack/deps/webpack/identifier'
+      },
+    })
+    .target('deps/mini-css-extract-plugin')
+
+  const packageFolder = dirname(require.resolve('mini-css-extract-plugin/package.json'))
+  fs.copySync(join(packageFolder, 'dist/hmr'), join(__dirname, 'deps/mini-css-extract-plugin/hmr'));
+}
+
+export async function ncc_react_refresh_webpack_plugin() {
+  fs.copySync(join(__dirname, 'bundled/@pmmmwh/react-refresh-webpack-plugin'), join(__dirname, 'deps/@pmmmwh/react-refresh-webpack-plugin'));
+}
+
+externals['file-loader'] = '@builder/pack/deps/file-loader';
+export async function ncc_file_loader(task, opts) {
+  await task
+    .source(
+      opts.src || relative(__dirname, require.resolve('file-loader'))
+    )
+    .ncc({ packageName: 'file-loader', externals })
+    .target('deps/file-loader');
+}
+
+externals['url-loader'] = '@builder/pack/deps/url-loader';
+export async function ncc_url_loader(task, opts) {
+  await task
+    .source(
+      opts.src || relative(__dirname, require.resolve('url-loader'))
+    )
+    .ncc({ packageName: 'url-loader', externals })
+    .target('deps/url-loader');
+}
+
 externals['css-minimizer-webpack-plugin'] = '@builder/pack/deps/css-minimizer-webpack-plugin';
 export async function ncc_css_minimizer_webpack_plugin(task, opts) {
   await task
@@ -333,16 +425,6 @@ export async function ncc_terser_webpack_plugin(task, opts) {
     .target('deps/terser-webpack-plugin');
 }
 
-externals['time-fix-plugin'] = '@builder/pack/deps/time-fix-plugin';
-export async function ncc_time_fix_plugin(task, opts) {
-  await task
-    .source(
-      opts.src || relative(__dirname, require.resolve('time-fix-plugin'))
-    )
-    .ncc({ packageName: 'time-fix-plugin', externals })
-    .target('deps/time-fix-plugin');
-}
-
 externals['webpack-filter-warnings-plugin'] = '@builder/pack/deps/webpack-filter-warnings-plugin';
 export async function ncc_webpack_filter_warnings_plugin(task, opts) {
   await task
@@ -363,25 +445,28 @@ export async function ncc_webpack_simple_progress_plugin(task, opts) {
     .target('deps/webpack-simple-progress-plugin');
 }
 
+externals['html-webpack-plugin'] = '@builder/pack/deps/html-webpack-plugin';
+
+export async function ncc_html_webpack_plugin() {
+  fs.copySync(join(__dirname, 'bundled/html-webpack-plugin'), join(__dirname, 'deps/html-webpack-plugin'));
+}
+
 externals['add-asset-html-webpack-plugin'] = '@builder/pack/deps/add-asset-html-webpack-plugin';
 export async function ncc_add_asset_html_webpack_plugin(task, opts) {
   await task
     .source(
       opts.src || relative(__dirname, require.resolve('add-asset-html-webpack-plugin'))
     )
-    .ncc({ packageName: 'add-asset-html-webpack-plugin', externals })
+    .ncc({ packageName: 'add-asset-html-webpack-plugin', externals: {
+      ...externals,
+    }})
     .target('deps/add-asset-html-webpack-plugin');
 }
 
-externals['html-webpack-plugin'] = '@builder/pack/deps/html-webpack-plugin';
-export async function ncc_html_webpack_plugin(task, opts) {
-  await task
-    .source(
-      opts.src || relative(__dirname, require.resolve('html-webpack-plugin'))
-    )
-    .ncc({ packageName: 'html-webpack-plugin', externals })
-    .target('deps/html-webpack-plugin');
-}
+// TODO compile html-webpack-plugin
+// html-webpack-plugin can not been pre-compiled
+// because of require.resolve need return string while pre-compiled as module
+// externals['html-webpack-plugin'] = '@builder/pack/deps/html-webpack-plugin';
 
 externals['eslint-reporting-webpack-plugin'] = '@builder/pack/deps/eslint-reporting-webpack-plugin';
 export async function ncc_eslint_reporting_webpack_plugin(task, opts) {
@@ -625,6 +710,9 @@ export async function ncc(task) {
     .parallel([
       'ncc_address',
       'ncc_ansi_html',
+      'ncc_pretty_error',
+      'ncc_tapable',
+      'ncc_html_minifier_terser',
       'ncc_babel_bundle',
       'ncc_babel_bundle_packages',
       'ncc_body_parser',
@@ -640,7 +728,6 @@ export async function ncc(task) {
       'ncc_case_sensitive_paths_webpack_plugin',
       'ncc_css_loader',
       'ncc_terser_webpack_plugin',
-      'ncc_time_fix_plugin',
       'ncc_debug',
       'ncc_set_value',
       'ncc_webpack_filter_warnings_plugin',
@@ -648,8 +735,9 @@ export async function ncc(task) {
       'ncc_ejs',
       'ncc_css_minimizer_webpack_plugin',
       'ncc_css_declaration_sorter',
-      'ncc_add_asset_html_webpack_plugin',
       'ncc_html_webpack_plugin',
+      'ncc_add_asset_html_webpack_plugin',
+      'ncc_url_loader',
       'ncc_file_loader',
       'ncc_eslint_reporting_webpack_plugin',
       'ncc_webpack_bundle_analyzer',
@@ -677,7 +765,9 @@ export async function ncc(task) {
       'ncc_webpack_bundle_packages',
       'ncc_babel_loader',
       'ncc_babel_jest',
-      'ncc_css_declaration_sorter',
+      'ncc_esbuild_loader',
+      'ncc_react_refresh_webpack_plugin',
+      'ncc_mini_css_extract_plugin',
       // 'ncc_fork_ts_checker_webpack_plugin_bundle',
       // 'ncc_fork_ts_checker_webpack_plugin_bundle_package',
     ]);

@@ -25,6 +25,7 @@ module.exports = function () {
     BasicEvaluatedExpression: require('webpack5/lib/javascript/BasicEvaluatedExpression'),
     ModuleFilenameHelpers: require('webpack5/lib/ModuleFilenameHelpers'),
     StringXor: require('webpack5/lib/util/StringXor'),
+    identifier: require('webpack5/lib/util/identifier'),
     sources: require('webpack5').sources,
     webpack: require('webpack5'),
     package: {
