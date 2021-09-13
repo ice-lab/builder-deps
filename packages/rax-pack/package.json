@@ -1,0 +1,12 @@
+{
+  "name": "rax-pack",
+  "version": "1.0.0",
+  "description": "",
+  "main": "taskfile-ncc.js",
+  "scripts": {
+    "setup": "yarn install",
+    "ncc-compiled": "ncc cache clean && taskr ncc"
+  },
+  "author": "",
+  "license": "ISC"
+}
