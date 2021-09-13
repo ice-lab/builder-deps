@@ -425,16 +425,6 @@ export async function ncc_terser_webpack_plugin(task, opts) {
     .target('deps/terser-webpack-plugin');
 }
 
-externals['time-fix-plugin'] = '@builder/pack/deps/time-fix-plugin';
-export async function ncc_time_fix_plugin(task, opts) {
-  await task
-    .source(
-      opts.src || relative(__dirname, require.resolve('time-fix-plugin'))
-    )
-    .ncc({ packageName: 'time-fix-plugin', externals })
-    .target('deps/time-fix-plugin');
-}
-
 externals['webpack-filter-warnings-plugin'] = '@builder/pack/deps/webpack-filter-warnings-plugin';
 export async function ncc_webpack_filter_warnings_plugin(task, opts) {
   await task
@@ -738,7 +728,6 @@ export async function ncc(task) {
       'ncc_case_sensitive_paths_webpack_plugin',
       'ncc_css_loader',
       'ncc_terser_webpack_plugin',
-      'ncc_time_fix_plugin',
       'ncc_debug',
       'ncc_set_value',
       'ncc_webpack_filter_warnings_plugin',
