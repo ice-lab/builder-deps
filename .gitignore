@@ -31,5 +31,5 @@ coverage
 *.dia~
 *.temp.json
 
-deps/*
+deps
 .history
