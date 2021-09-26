@@ -1,11 +1,16 @@
 {
-  "name": "rax-pack",
-  "version": "1.0.0",
+  "name": "@builder/rax-pack",
+  "version": "0.1.0",
   "description": "",
   "main": "taskfile-ncc.js",
   "scripts": {
     "setup": "yarn install",
     "ncc-compiled": "ncc cache clean && taskr ncc"
+  },
+  "taskr": {
+    "requires": [
+      "./taskfile-ncc.js"
+    ] 
   },
   "devDependencies": {
     "@taskr/clear": "1.1.0",
@@ -16,8 +21,21 @@
     "lerna": "^4.0.0",
     "taskr": "1.1.0",
     "ts-node": "^9.0.0",
-    "typescript": "^4.0.0"
+    "typescript": "^4.0.0",
+    "css-loader": "3.6.0",
+    "sass-loader": "10.2.0",
+    "less-loader": "7.3.0",
+    "postcss-loader": "3.0.0",
+    "postcss-safe-parser": "4.0.2",
+    "terser-webpack-plugin": "2.3.8",
+    "css-minimizer-webpack-plugin": "1.3.0"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "deps"
+  ]
 }

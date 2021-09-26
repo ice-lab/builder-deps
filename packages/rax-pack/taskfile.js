@@ -38,11 +38,87 @@ const externals = {
   'jest-worker': 'jest-worker',
 };
 
+externals['css-loader'] = '@builder/pack/deps/css-loader';
+export async function ncc_css_loader(task, opts) {
+  await task
+    .source(
+      opts.src || relative(__dirname, require.resolve('css-loader'))
+    )
+    .ncc({ packageName: 'css-loader', externals })
+    .target('deps/css-loader');
+}
+
+externals['sass-loader'] = '@builder/pack/deps/sass-loader';
+export async function ncc_sass_loader(task, opts) {
+  await task
+    .source(
+      opts.src || relative(__dirname, require.resolve('sass-loader'))
+    )
+    .ncc({ packageName: 'sass-loader', externals })
+    .target('deps/sass-loader');
+}
+
+externals['less-loader'] = '@builder/pack/deps/less-loader';
+export async function ncc_less_loader(task, opts) {
+  await task
+    .source(
+      opts.src || relative(__dirname, require.resolve('less-loader'))
+    )
+    .ncc({ packageName: 'less-loader', externals })
+    .target('deps/less-loader');
+}
+
+externals['postcss-loader'] = '@builder/pack/deps/postcss-loader';
+export async function ncc_postcss_loader(task, opts) {
+  await task
+    .source(
+      opts.src || relative(__dirname, require.resolve('postcss-loader'))
+    )
+    .ncc({ packageName: 'postcss-loader', externals })
+    .target('deps/postcss-loader');
+}
+
+externals['postcss-safe-parser'] = '@builder/pack/deps/postcss-safe-parser';
+export async function ncc_postcss_safe_parser(task, opts) {
+  await task
+    .source(
+      opts.src || relative(__dirname, require.resolve('postcss-safe-parser'))
+    )
+    .ncc({ packageName: 'postcss-safe-parser', externals })
+    .target('deps/postcss-safe-parser');
+}
+
+externals['terser-webpack-plugin'] = '@builder/pack/deps/terser-webpack-plugin';
+export async function ncc_terser_webpack_plugin(task, opts) {
+  await task
+    .source(
+      opts.src || relative(__dirname, require.resolve('terser-webpack-plugin'))
+    )
+    .ncc({ packageName: 'terser-webpack-plugin', externals })
+    .target('deps/terser-webpack-plugin');
+}
+
+externals['css-minimizer-webpack-plugin'] = '@builder/pack/deps/css-minimizer-webpack-plugin';
+export async function ncc_css_minimizer_webpack_plugin(task, opts) {
+  await task
+    .source(
+      opts.src || relative(__dirname, require.resolve('css-minimizer-webpack-plugin'))
+    )
+    .ncc({ packageName: 'css-minimizer-webpack-plugin', externals })
+    .target('deps/css-minimizer-webpack-plugin');
+}
+
 export async function ncc(task) {
   await task
     .clear('compiled')
     .parallel([
-      
+      'ncc_css_loader',
+      'ncc_sass_loader',
+      'ncc_less_loader',
+      'ncc_postcss_loader',
+      'ncc_postcss_safe_parser',
+      'ncc_terser_webpack_plugin',
+      'ncc_css_minimizer_webpack_plugin',
     ]);
 }
 
