@@ -88,16 +88,6 @@ export async function ncc_postcss_safe_parser(task, opts) {
     .target('deps/postcss-safe-parser');
 }
 
-externals['terser-webpack-plugin'] = '@builder/pack/deps/terser-webpack-plugin';
-export async function ncc_terser_webpack_plugin(task, opts) {
-  await task
-    .source(
-      opts.src || relative(__dirname, require.resolve('terser-webpack-plugin'))
-    )
-    .ncc({ packageName: 'terser-webpack-plugin', externals })
-    .target('deps/terser-webpack-plugin');
-}
-
 externals['css-minimizer-webpack-plugin'] = '@builder/pack/deps/css-minimizer-webpack-plugin';
 export async function ncc_css_minimizer_webpack_plugin(task, opts) {
   await task
@@ -117,7 +107,6 @@ export async function ncc(task) {
       'ncc_less_loader',
       'ncc_postcss_loader',
       'ncc_postcss_safe_parser',
-      'ncc_terser_webpack_plugin',
       'ncc_css_minimizer_webpack_plugin',
     ]);
 }
