@@ -8,9 +8,16 @@
     "deps"
   ],
   "scripts": {
-    "setup": "lerna exec -- npm run setup"
+    "setup": "yarn && lerna exec -- npm run setup",
+    "ncc-compiled": "lerna exec -- npm run ncc-compiled",
+    "publish": "ts-node ./scripts/publish"
   },
   "publishConfig": {
     "access": "public"
+  },
+  "devDependencies": {
+    "@types/node": "^16.11.1",
+    "ts-node": "^10.3.0",
+    "typescript": "^4.4.4"
   }
 }

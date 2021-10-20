@@ -24,6 +24,7 @@ module.exports = function () {
     WebWorkerTemplatePlugin: require('webpack5/lib/webworker/WebWorkerTemplatePlugin'),
     BasicEvaluatedExpression: require('webpack5/lib/javascript/BasicEvaluatedExpression'),
     ModuleFilenameHelpers: require('webpack5/lib/ModuleFilenameHelpers'),
+    GraphHelpers: require('webpack5/lib/GraphHelpers'),
     StringXor: require('webpack5/lib/util/StringXor'),
     identifier: require('webpack5/lib/util/identifier'),
     sources: require('webpack5').sources,

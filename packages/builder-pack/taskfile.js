@@ -2,6 +2,7 @@
 const fs = require('fs-extra');
 const { relative, basename, resolve, dirname, join } = require('path')
 const { Module } = require('module')
+const getPackagePath = require('./scripts/getPackagePath');
 
 // Note:
 // "bundles" folder shadows main node_modules in workspace where all installs in
@@ -222,16 +223,6 @@ export async function ncc_ejs(task, opts) {
     .target('deps/ejs');
 }
 
-externals['file-loader'] = '@builder/pack/deps/file-loader';
-export async function ncc_file_loader(task, opts) {
-  await task
-    .source(
-      opts.src || relative(__dirname, require.resolve('file-loader'))
-    )
-    .ncc({ packageName: 'file-loader', externals })
-    .target('deps/file-loader');
-}
-
 // externals['fork-ts-checker-webpack-plugin'] = '@builder/pack/deps/fork-ts-checker-webpack-plugin';
 export async function ncc_fork_ts_checker_webpack_plugin_bundle(task, opts) {
   await task
@@ -329,7 +320,7 @@ export async function ncc_css_declaration_sorter(task, opts) {
     .source(opts.src || relative(__dirname, require.resolve('css-declaration-sorter')))
     .ncc({ packageName: 'css-declaration-sorter', externals, dir })
     .target(`deps/css-declaration-sorter/${dir}`);
-  const packageFolder = dirname(require.resolve('css-declaration-sorter/package.json'))
+  const packageFolder = dirname(getPackagePath('css-declaration-sorter'))
   fs.copySync(join(packageFolder, 'orders'), join(__dirname, 'deps/css-declaration-sorter/orders'));
 }
 
@@ -367,32 +358,12 @@ export async function ncc_mini_css_extract_plugin(task, opts) {
     })
     .target('deps/mini-css-extract-plugin')
 
-  const packageFolder = dirname(require.resolve('mini-css-extract-plugin/package.json'))
+  const packageFolder = dirname(getPackagePath('mini-css-extract-plugin'))
   fs.copySync(join(packageFolder, 'dist/hmr'), join(__dirname, 'deps/mini-css-extract-plugin/hmr'));
 }
 
 export async function ncc_react_refresh_webpack_plugin() {
   fs.copySync(join(__dirname, 'bundled/@pmmmwh/react-refresh-webpack-plugin'), join(__dirname, 'deps/@pmmmwh/react-refresh-webpack-plugin'));
-}
-
-externals['file-loader'] = '@builder/pack/deps/file-loader';
-export async function ncc_file_loader(task, opts) {
-  await task
-    .source(
-      opts.src || relative(__dirname, require.resolve('file-loader'))
-    )
-    .ncc({ packageName: 'file-loader', externals })
-    .target('deps/file-loader');
-}
-
-externals['url-loader'] = '@builder/pack/deps/url-loader';
-export async function ncc_url_loader(task, opts) {
-  await task
-    .source(
-      opts.src || relative(__dirname, require.resolve('url-loader'))
-    )
-    .ncc({ packageName: 'url-loader', externals })
-    .target('deps/url-loader');
 }
 
 externals['css-minimizer-webpack-plugin'] = '@builder/pack/deps/css-minimizer-webpack-plugin';
@@ -468,22 +439,9 @@ export async function ncc_add_asset_html_webpack_plugin(task, opts) {
 // because of require.resolve need return string while pre-compiled as module
 // externals['html-webpack-plugin'] = '@builder/pack/deps/html-webpack-plugin';
 
-externals['eslint-reporting-webpack-plugin'] = '@builder/pack/deps/eslint-reporting-webpack-plugin';
-export async function ncc_eslint_reporting_webpack_plugin(task, opts) {
-  await task
-    .source(
-      opts.src || relative(__dirname, require.resolve('eslint-reporting-webpack-plugin'))
-    )
-    .ncc({ packageName: 'eslint-reporting-webpack-plugin', externals: {
-      ...externals,
-      eslint: 'eslint',
-    } })
-    .target('deps/eslint-reporting-webpack-plugin');
-}
-
 externals['webpack-bundle-analyzer'] = '@builder/pack/deps/webpack-bundle-analyzer';
 export async function ncc_webpack_bundle_analyzer(task, opts) {
-  const assetsFolder = join(dirname(require.resolve('webpack-bundle-analyzer/package.json')), 'public');
+  const assetsFolder = join(dirname(getPackagePath('webpack-bundle-analyzer')), 'public');
   await task
     .source(
       opts.src || relative(__dirname, require.resolve('webpack-bundle-analyzer'))
@@ -491,16 +449,6 @@ export async function ncc_webpack_bundle_analyzer(task, opts) {
     .ncc({ packageName: 'webpack-bundle-analyzer', externals })
     .target('deps/webpack-bundle-analyzer');
   fs.copySync(assetsFolder, join(__dirname, 'deps/webpack-bundle-analyzer/public'));
-}
-
-externals['eslint-loader'] = '@builder/pack/deps/eslint-loader';
-export async function ncc_eslint_loader(task, opts) {
-  await task
-    .source(
-      opts.src || relative(__dirname, require.resolve('eslint-loader'))
-    )
-    .ncc({ packageName: 'eslint-loader', externals })
-    .target('deps/eslint-loader');
 }
 
 externals['set-value'] = '@builder/pack/deps/set-value';
@@ -585,16 +533,6 @@ export async function ncc_postcss_safe_parser(task, opts) {
     )
     .ncc({ packageName: 'postcss-safe-parser', externals })
     .target('deps/postcss-safe-parser')
-}
-
-externals['postcss-plugin-rpx2vw'] = '@builder/pack/deps/postcss-plugin-rpx2vw'
-export async function ncc_postcss_plugin_rpx2vw(task, opts) {
-  await task
-    .source(
-      opts.src || relative(__dirname, require.resolve('postcss-plugin-rpx2vw'))
-    )
-    .ncc({ packageName: 'postcss-plugin-rpx2vw', externals })
-    .target('deps/postcss-plugin-rpx2vw')
 }
 
 externals['webpack-chain'] = '@builder/pack/deps/webpack-chain';
@@ -694,16 +632,6 @@ export async function ncc_babel_loader(task, opts) {
     .target('deps/babel-loader');
 }
 
-externals['babel-jest'] = '@builder/pack/deps/babel-jest';
-export async function ncc_babel_jest(task, opts) {
-  await task
-    .source(
-      opts.src || relative(__dirname, require.resolve('babel-jest'))
-    )
-    .ncc({ packageName: 'babel-jest', externals })
-    .target('deps/babel-jest');
-}
-
 export async function ncc(task) {
   await task
     .clear('compiled')
@@ -737,17 +665,12 @@ export async function ncc(task) {
       'ncc_css_declaration_sorter',
       'ncc_html_webpack_plugin',
       'ncc_add_asset_html_webpack_plugin',
-      'ncc_url_loader',
-      'ncc_file_loader',
-      'ncc_eslint_reporting_webpack_plugin',
       'ncc_webpack_bundle_analyzer',
-      'ncc_eslint_loader',
       'ncc_esbuild_loader',
       'ncc_sass_loader',
       'ncc_postcss_loader',
       'ncc_postcss_preset_env',
       'ncc_postcss_safe_parser',
-      'ncc_postcss_plugin_rpx2vw',
       'ncc_prettier',
       'ncc_friendly_errors_webpack_plugin',
       'ncc_globby',
@@ -764,7 +687,6 @@ export async function ncc(task) {
       'ncc_webpack_bundle5',
       'ncc_webpack_bundle_packages',
       'ncc_babel_loader',
-      'ncc_babel_jest',
       'ncc_esbuild_loader',
       'ncc_react_refresh_webpack_plugin',
       'ncc_mini_css_extract_plugin',
