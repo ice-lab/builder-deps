@@ -3,6 +3,7 @@ const ncc = require('@vercel/ncc')
 const { existsSync, readFileSync } = require('fs')
 const { basename, dirname, extname, join, resolve } = require('path')
 const { Module } = require('module')
+const getPackagePath = require('./scripts/getPackagePath');
 
 // See taskfile.js bundleContext definition for explanation
 const m = new Module(resolve(__dirname, 'bundles', '_'))
@@ -57,9 +58,9 @@ module.exports = function (task) {
 
 // This function writes a minimal `package.json` file for a compiled package.
 // It defines `name`, `main`, `author`, and `license`. It also defines `types`.
-// n.b. types intended for development usage only.
+// n.b. types intended for development usage only.`
 function writePackageManifest(packageName, main, bundleName, precompiled, outputDir) {
-  const packagePath = bundleRequire.resolve(packageName + '/package.json')
+  const packagePath = getPackagePath(bundleRequire.resolve(packageName), true);
   let { name, author, license } = require(packagePath)
 
   const compiledPackagePath = join(
