@@ -632,6 +632,17 @@ export async function ncc_babel_loader(task, opts) {
     .target('deps/babel-loader');
 }
 
+externals['postcss'] = '@builder/pack/deps/postcss';
+export async function ncc_postcss(task, opts) {
+  await task
+    .source(
+      opts.src || relative(__dirname, require.resolve('postcss'))
+    )
+    .ncc({ packageName: 'postcss', externals })
+    .target('deps/postcss');
+}
+
+
 export async function ncc(task) {
   await task
     .clear('compiled')
@@ -690,6 +701,7 @@ export async function ncc(task) {
       'ncc_esbuild_loader',
       'ncc_react_refresh_webpack_plugin',
       'ncc_mini_css_extract_plugin',
+      'ncc_postcss',
       // 'ncc_fork_ts_checker_webpack_plugin_bundle',
       // 'ncc_fork_ts_checker_webpack_plugin_bundle_package',
     ]);

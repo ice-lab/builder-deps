@@ -1,6 +1,6 @@
 {
   "name": "@builder/pack",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "license": "MIT",
   "author": "ICE",
   "description": "basic dependencies",
@@ -98,7 +98,8 @@
     "webpack-bundle-analyzer": "4.4.1",
     "webpack-chain": "6.5.1",
     "webpack-filter-warnings-plugin": "1.2.1",
-    "webpack-simple-progress-plugin": "0.0.5"
+    "webpack-simple-progress-plugin": "0.0.5",
+    "postcss": "8.3.11"
   },
   "publishConfig": {
     "access": "public"

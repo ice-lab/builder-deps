@@ -38,7 +38,7 @@ const externals = {
   'jest-worker': 'jest-worker',
 };
 
-externals['css-loader'] = '@builder/pack/deps/css-loader';
+externals['css-loader'] = '@builder/rax-pack/deps/css-loader';
 export async function ncc_css_loader(task, opts) {
   await task
     .source(
@@ -48,7 +48,7 @@ export async function ncc_css_loader(task, opts) {
     .target('deps/css-loader');
 }
 
-externals['sass-loader'] = '@builder/pack/deps/sass-loader';
+externals['sass-loader'] = '@builder/rax-pack/deps/sass-loader';
 export async function ncc_sass_loader(task, opts) {
   await task
     .source(
@@ -58,7 +58,7 @@ export async function ncc_sass_loader(task, opts) {
     .target('deps/sass-loader');
 }
 
-externals['less-loader'] = '@builder/pack/deps/less-loader';
+externals['less-loader'] = '@builder/rax-pack/deps/less-loader';
 export async function ncc_less_loader(task, opts) {
   await task
     .source(
@@ -68,7 +68,7 @@ export async function ncc_less_loader(task, opts) {
     .target('deps/less-loader');
 }
 
-externals['postcss-loader'] = '@builder/pack/deps/postcss-loader';
+externals['postcss-loader'] = '@builder/rax-pack/deps/postcss-loader';
 export async function ncc_postcss_loader(task, opts) {
   await task
     .source(
@@ -78,7 +78,7 @@ export async function ncc_postcss_loader(task, opts) {
     .target('deps/postcss-loader');
 }
 
-externals['postcss-safe-parser'] = '@builder/pack/deps/postcss-safe-parser';
+externals['postcss-safe-parser'] = '@builder/rax-pack/deps/postcss-safe-parser';
 export async function ncc_postcss_safe_parser(task, opts) {
   await task
     .source(
@@ -88,7 +88,7 @@ export async function ncc_postcss_safe_parser(task, opts) {
     .target('deps/postcss-safe-parser');
 }
 
-externals['css-minimizer-webpack-plugin'] = '@builder/pack/deps/css-minimizer-webpack-plugin';
+externals['css-minimizer-webpack-plugin'] = '@builder/rax-pack/deps/css-minimizer-webpack-plugin';
 export async function ncc_css_minimizer_webpack_plugin(task, opts) {
   await task
     .source(
@@ -96,6 +96,16 @@ export async function ncc_css_minimizer_webpack_plugin(task, opts) {
     )
     .ncc({ packageName: 'css-minimizer-webpack-plugin', externals })
     .target('deps/css-minimizer-webpack-plugin');
+}
+
+externals['postcss'] = '@builder/rax-pack/deps/postcss';
+export async function ncc_postcss(task, opts) {
+  await task
+    .source(
+      opts.src || relative(__dirname, require.resolve('postcss'))
+    )
+    .ncc({ packageName: 'postcss', externals })
+    .target('deps/postcss');
 }
 
 export async function ncc(task) {
@@ -108,6 +118,7 @@ export async function ncc(task) {
       'ncc_postcss_loader',
       'ncc_postcss_safe_parser',
       'ncc_css_minimizer_webpack_plugin',
+      'ncc_postcss',
     ]);
 }
 
