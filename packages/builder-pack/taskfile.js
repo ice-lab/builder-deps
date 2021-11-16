@@ -535,6 +535,16 @@ export async function ncc_postcss_safe_parser(task, opts) {
     .target('deps/postcss-safe-parser')
 }
 
+externals['postcss-nested'] = '@builder/pack/deps/postcss-nested';
+export async function ncc_postcss_nested(task, opts) {
+  await task
+    .source(
+      opts.src || relative(__dirname, require.resolve('postcss-nested'))
+    )
+    .ncc({ packageName: 'postcss-nested', externals })
+    .target('deps/postcss-nested');
+}
+
 externals['webpack-chain'] = '@builder/pack/deps/webpack-chain';
 export async function ncc_webpack_chain(task, opts) {
   await task
@@ -671,6 +681,7 @@ export async function ncc(task) {
       'ncc_postcss_loader',
       'ncc_postcss_preset_env',
       'ncc_postcss_safe_parser',
+      'ncc_postcss_nested',
       'ncc_prettier',
       'ncc_friendly_errors_webpack_plugin',
       'ncc_globby',
