@@ -5,7 +5,6 @@ jspm_packages
 
 # Only keep yarn.lock in the root
 package-lock.json
-*/**/yarn.lock
 
 # Logs
 logs
