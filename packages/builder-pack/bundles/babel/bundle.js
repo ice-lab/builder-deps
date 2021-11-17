@@ -76,6 +76,18 @@ function pluginProposalClassProperties() {
   return require('@babel/plugin-proposal-class-properties')
 }
 
+function pluginProposalPrivateMethods() {
+  return require('@babel/plugin-proposal-private-methods')
+}
+
+function pluginProposalPrivatePropertyInObject() {
+  return require('@babel/plugin-proposal-private-property-in-object')
+}
+
+function pluginProposalClassProperties() {
+  return require('@babel/plugin-proposal-class-properties')
+}
+
 function presetEnv() {
   return require('@babel/preset-env')
 }
@@ -97,6 +109,8 @@ module.exports = {
   pluginProposalLogicalAssignmentOperators,
   pluginProposalNullishCoalescingOperator,
   pluginProposalClassProperties,
+  pluginProposalPrivateMethods,
+  pluginProposalPrivatePropertyInObject,
   pluginProposalThrowExpressions,
   pluginSyntaxImportMeta,
   pluginProposalPipelineOperator,
