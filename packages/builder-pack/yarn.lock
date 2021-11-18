@@ -417,13 +417,23 @@
     "@babel/helper-plugin-utils" "^7.14.5"
     "@babel/plugin-syntax-pipeline-operator" "^7.15.0"
 
-"@babel/plugin-proposal-private-methods@^7.14.5":
+"@babel/plugin-proposal-private-methods@7.14.5", "@babel/plugin-proposal-private-methods@^7.14.5":
   version "7.14.5"
-  resolved "https://registry.nlark.com/@babel/plugin-proposal-private-methods/download/@babel/plugin-proposal-private-methods-7.14.5.tgz?cache=0&sync_timestamp=1623280416204&other_urls=https%3A%2F%2Fregistry.nlark.com%2F%40babel%2Fplugin-proposal-private-methods%2Fdownload%2F%40babel%2Fplugin-proposal-private-methods-7.14.5.tgz#37446495996b2945f30f5be5b60d5e2aa4f5792d"
+  resolved "https://registry.npmmirror.com/@babel/plugin-proposal-private-methods/download/@babel/plugin-proposal-private-methods-7.14.5.tgz#37446495996b2945f30f5be5b60d5e2aa4f5792d"
   integrity sha1-N0RklZlrKUXzD1vltg1eKqT1eS0=
   dependencies:
     "@babel/helper-create-class-features-plugin" "^7.14.5"
     "@babel/helper-plugin-utils" "^7.14.5"
+
+"@babel/plugin-proposal-private-property-in-object@7.14.5":
+  version "7.14.5"
+  resolved "https://registry.npmmirror.com/@babel/plugin-proposal-private-property-in-object/download/@babel/plugin-proposal-private-property-in-object-7.14.5.tgz#9f65a4d0493a940b4c01f8aa9d3f1894a587f636"
+  integrity sha1-n2Wk0Ek6lAtMAfiqnT8YlKWH9jY=
+  dependencies:
+    "@babel/helper-annotate-as-pure" "^7.14.5"
+    "@babel/helper-create-class-features-plugin" "^7.14.5"
+    "@babel/helper-plugin-utils" "^7.14.5"
+    "@babel/plugin-syntax-private-property-in-object" "^7.14.5"
 
 "@babel/plugin-proposal-private-property-in-object@^7.15.4":
   version "7.15.4"
