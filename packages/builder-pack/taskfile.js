@@ -366,6 +366,10 @@ export async function ncc_react_refresh_webpack_plugin() {
   fs.copySync(join(__dirname, 'bundled/@pmmmwh/react-refresh-webpack-plugin'), join(__dirname, 'deps/@pmmmwh/react-refresh-webpack-plugin'));
 }
 
+export async function ncc_speed_measure_webpack_plugin() {
+  fs.copySync(join(__dirname, 'bundled/speed-measure-webpack-plugin'), join(__dirname, 'deps/speed-measure-webpack-plugin'));
+}
+
 externals['css-minimizer-webpack-plugin'] = '@builder/pack/deps/css-minimizer-webpack-plugin';
 export async function ncc_css_minimizer_webpack_plugin(task, opts) {
   await task
@@ -420,6 +424,18 @@ externals['html-webpack-plugin'] = '@builder/pack/deps/html-webpack-plugin';
 
 export async function ncc_html_webpack_plugin() {
   fs.copySync(join(__dirname, 'bundled/html-webpack-plugin'), join(__dirname, 'deps/html-webpack-plugin'));
+}
+
+externals['add-asset-html-webpack-plugin'] = '@builder/pack/deps/add-asset-html-webpack-plugin';
+export async function ncc_add_asset_html_webpack_plugin(task, opts) {
+  await task
+    .source(
+      opts.src || relative(__dirname, require.resolve('add-asset-html-webpack-plugin'))
+    )
+    .ncc({ packageName: 'add-asset-html-webpack-plugin', externals: {
+      ...externals,
+    }})
+    .target('deps/add-asset-html-webpack-plugin');
 }
 
 externals['add-asset-html-webpack-plugin'] = '@builder/pack/deps/add-asset-html-webpack-plugin';
@@ -701,6 +717,7 @@ export async function ncc(task) {
       'ncc_esbuild_loader',
       'ncc_react_refresh_webpack_plugin',
       'ncc_mini_css_extract_plugin',
+      'ncc_speed_measure_webpack_plugin',
       // 'ncc_fork_ts_checker_webpack_plugin_bundle',
       // 'ncc_fork_ts_checker_webpack_plugin_bundle_package',
     ]);
