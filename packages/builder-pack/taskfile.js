@@ -1,6 +1,7 @@
 // inspired by https://github.com/vercel/next.js/blob/canary/packages/next/taskfile.js
 const fs = require('fs-extra');
-const { relative, basename, resolve, dirname, join } = require('path')
+const { relative, basename, resolve, dirname, extname, join, default: path } = require('path')
+const { sync } = require('globby');
 const { Module } = require('module')
 const getPackagePath = require('./scripts/getPackagePath');
 
@@ -628,6 +629,19 @@ export async function ncc_schema_utils3(task, opts) {
     .target('deps/schema-utils3')
 }
 
+externals['schema-utils4'] = '@builder/pack/deps/schema-utils4'
+export async function ncc_schema_utils4(task, opts) {
+  await task
+    .source(
+      opts.src || relative(__dirname, bundleRequire.resolve('schema-utils4'))
+    )
+    .ncc({
+      packageName: 'schema-utils4',
+      externals,
+    })
+    .target('deps/schema-utils4')
+}
+
 export async function ncc_webpack_bundle5(task, opts) {
   await task
     .source(opts.src || 'bundles/webpack/bundle5.js')
@@ -656,6 +670,63 @@ export async function ncc_babel_loader(task, opts) {
     )
     .ncc({ packageName: 'babel-loader', externals })
     .target('deps/babel-loader');
+}
+
+export async function ncc_url(task) {
+  await task
+    .source(
+      relative(__dirname, require.resolve('url/url'))
+    )
+    .ncc({ packageName: 'url', externals })
+    .target('deps/url');
+}
+
+export async function ncc_webpack_dev_server(task, opts) {
+  // pre bundle dependencies of webpack-dev-server
+  const packageFolder = dirname(getPackagePath('webpack-dev-server'));
+  const packageJson = fs.readJSONSync(join(packageFolder, 'package.json'));
+  // 'ansi-html-community', 'html-entities' 为 client 依赖，非 cjs 模块不进行打包
+  // 'schema-utils' 依赖的版本为 4
+  const dependenciesKey = Object.keys(packageJson.dependencies)
+    .filter(key => !['schema-utils', 'ansi-html-community', 'html-entities'].includes(key));
+  const taskNames = dependenciesKey.filter((package) => {
+    return !externals[package];
+  });
+
+  for (let i = 0; i < taskNames.length; i ++) {
+    await task
+    .source(relative(__dirname, require.resolve(taskNames[i], {paths: [packageFolder]})))
+    .ncc({ packageName: taskNames[i], externals: {
+      ...externals,
+    } })
+    .target(`deps/${taskNames[i]}`);
+  }
+  const paths = sync(['**/*'], { cwd: packageFolder, ignore: ['node_modules'] });
+  paths.forEach((filePath) => {
+    const sourcePath = join(packageFolder, filePath);
+    const fileContent = fs.readFileSync(sourcePath, 'utf8');
+    fs.ensureDirSync(join(__dirname, `deps/webpack-dev-server/${dirname(filePath)}`));
+    const targetPath = join(__dirname, `deps/webpack-dev-server/${filePath}`);
+    if (extname(filePath) === '.js') {
+      fs.writeFileSync(targetPath, dependenciesKey.reduce((acc, curr) => {
+        return acc.replace(`require("${curr}")`, `require("${externals[curr] || `@builder/pack/deps/${curr}`}")`);
+      }, fileContent).replace('require("schema-utils")', 'require("@builder/pack/deps/schema-utils4")'))
+    } else {
+      fs.copyFileSync(sourcePath, targetPath);
+    }
+  });
+}
+
+export async function ncc_webpack_bundle_packages(task, opts) {
+  await task
+    .source(opts.src || 'bundles/webpack/packages/*')
+    .target('deps/webpack/')
+}
+
+export async function ncc_webpack_bundle_hot(task, opts) {
+  await task
+    .source(opts.src || `${dirname(require.resolve('webpack/hot/dev-server'))}/*`)
+    .target('deps/webpack/hot/')
 }
 
 export async function ncc(task) {
@@ -705,6 +776,7 @@ export async function ncc(task) {
       'ncc_lodash',
       'ncc_less_loader',
       'ncc_schema_utils3',
+      'ncc_schema_utils4',
       'ncc_serialize_javascript',
       'ncc_webpack_chain',
       'ncc_webpack_sources',
@@ -713,26 +785,15 @@ export async function ncc(task) {
       'ncc_webpack_bundle4',
       'ncc_webpack_bundle5',
       'ncc_webpack_bundle_packages',
+      'ncc_url',
       'ncc_babel_loader',
-      'ncc_esbuild_loader',
       'ncc_react_refresh_webpack_plugin',
-      'ncc_mini_css_extract_plugin',
       'ncc_speed_measure_webpack_plugin',
+      'ncc_mini_css_extract_plugin',
       // 'ncc_fork_ts_checker_webpack_plugin_bundle',
       // 'ncc_fork_ts_checker_webpack_plugin_bundle_package',
     ]);
-}
-
-export async function ncc_webpack_bundle_packages(task, opts) {
-  await task
-    .source(opts.src || 'bundles/webpack/packages/*')
-    .target('deps/webpack/')
-}
-
-export async function ncc_webpack_bundle_hot(task, opts) {
-  await task
-    .source(opts.src || `${dirname(require.resolve('webpack/hot/dev-server'))}/*`)
-    .target('deps/webpack/hot/')
+  await task.parallel(['ncc_webpack_dev_server']);
 }
 
 export default async function (task) {
