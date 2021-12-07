@@ -773,7 +773,11 @@ export async function ncc_webpack_dev_server(task, opts) {
     const targetPath = join(__dirname, `deps/webpack-dev-server/${filePath}`);
     if (extname(filePath) === '.js') {
       fs.writeFileSync(targetPath, dependenciesKey.reduce((acc, curr) => {
-        return acc.replace(`require("${curr}")`, `require("${externals[curr] || `@builder/pack/deps/${curr}`}")`);
+        return acc
+          // cjs
+          .replace(`require("${curr}")`, `require("${externals[curr] || `@builder/pack/deps/${curr}`}")`)
+          // esm
+          .replace(`from "${curr}"`, `from "${externals[curr] || `@builder/pack/deps/${curr}`}"`);
       }, fileContent).replace('require("schema-utils")', 'require("@builder/pack/deps/schema-utils4")'))
     } else {
       fs.copyFileSync(sourcePath, targetPath);
