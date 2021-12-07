@@ -100,6 +100,18 @@ function presetTypescript() {
   return require('@babel/preset-typescript')
 }
 
+function types() {
+  return require('@babel/types')
+}
+
+function parser() {
+  return require('@babel/parser')
+}
+
+function traverse() {
+  return require('@babel/traverse')
+}
+
 module.exports = {
   codeFrame,
   core,
@@ -125,4 +137,7 @@ module.exports = {
   presetEnv,
   presetReact,
   presetTypescript,
+  types,
+  parser,
+  traverse,
 }

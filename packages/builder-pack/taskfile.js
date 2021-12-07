@@ -672,6 +672,70 @@ export async function ncc_babel_loader(task, opts) {
     .target('deps/babel-loader');
 }
 
+externals['raw-loader'] = '@builder/pack/deps/raw-loader';
+export async function ncc_raw_loader(task, opts) {
+  await task
+    .source(
+      opts.src || relative(__dirname, require.resolve('raw-loader'))
+    )
+    .ncc({ packageName: 'raw-loader', externals: {
+      ...externals,
+      'schema-utils': '@builder/pack/deps/schema-utils3',
+    }})
+    .target('deps/raw-loader');
+}
+
+externals['worker-loader'] = '@builder/pack/deps/worker-loader';
+export async function ncc_worker_loader(task, opts) {
+  await task
+    .source(
+      opts.src || 'bundles/worker-loader.js'
+    )
+    .ncc({ packageName: 'worker-loader', externals: {
+      ...externals,
+      'schema-utils': '@builder/pack/deps/schema-utils3',
+      'webpack/package.json': 'webpack/package.json',
+      'webpack/lib/node/NodeTargetPlugin': 'webpack/lib/node/NodeTargetPlugin',
+      'webpack/lib/SingleEntryPlugin': 'webpack/lib/SingleEntryPlugin',
+      'webpack/lib/webworker/WebWorkerTemplatePlugin': 'webpack/lib/webworker/WebWorkerTemplatePlugin',
+      'webpack/lib/ExternalsPlugin': 'webpack/lib/ExternalsPlugin',
+      'webpack/lib/web/FetchCompileWasmPlugin': 'webpack/lib/web/FetchCompileWasmPlugin',
+      'webpack/lib/web/FetchCompileAsyncWasmPlugin': 'webpack/lib/web/FetchCompileAsyncWasmPlugin',
+      'webpack/lib/web/FetchCompileWasmTemplatePlugin': 'webpack/lib/web/FetchCompileWasmTemplatePlugin',
+    }})
+    .target('deps/worker-loader');
+}
+
+externals['url-loader'] = '@builder/pack/deps/url-loader';
+export async function ncc_url_loader(task, opts) {
+  await task
+    .source(
+      opts.src || relative(__dirname, require.resolve('url-loader'))
+    )
+    .ncc({ packageName: 'url-loader', externals: {
+      ...externals,
+      'schema-utils': '@builder/pack/deps/schema-utils3',
+    } })
+    .target('deps/url-loader');
+}
+
+export async function ncc_workbox_window() {
+  // workbox-window 已包含单文件产物，拷贝 build 产物即可
+  const packagePath = getPackagePath('workbox-window');
+  const packageFolder = dirname(getPackagePath('workbox-window'));
+  fs.copySync(packagePath, join(__dirname, 'deps/workbox-window/package.json'));
+  fs.copySync(join(packageFolder, 'build'), join(__dirname, 'deps/workbox-window/build'));
+}
+
+export async function ncc_workbox_webpack_plugin(task, opts) {
+  await task
+    .source(
+      opts.src || relative(__dirname, require.resolve('workbox-webpack-plugin'))
+    )
+    .ncc({ packageName: 'workbox-webpack-plugin', externals })
+    .target('deps/workbox-webpack-plugin');
+}
+
 export async function ncc_url(task) {
   await task
     .source(
@@ -787,6 +851,11 @@ export async function ncc(task) {
       'ncc_webpack_bundle_packages',
       'ncc_url',
       'ncc_babel_loader',
+      'ncc_raw_loader',
+      'ncc_url_loader',
+      'ncc_worker_loader',
+      'ncc_workbox_window',
+      'ncc_workbox_webpack_plugin',
       'ncc_react_refresh_webpack_plugin',
       'ncc_speed_measure_webpack_plugin',
       'ncc_mini_css_extract_plugin',
