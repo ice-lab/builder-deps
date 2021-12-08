@@ -7,7 +7,8 @@ exports.default = undefined
 let initializedWebpack5 = false
 let initializedWebpack4 = false
 let initFns = []
-exports.init = function (useWebpack5) {
+
+function initWebpack (useWebpack5) {
   if (useWebpack5) {
     Object.assign(exports, require('./bundle5')())
     exports.isWebpack5 = true
@@ -20,6 +21,12 @@ exports.init = function (useWebpack5) {
     initializedWebpack4 = true
   }
 }
+
+// init default for webpack 5
+initWebpack(true);
+
+// compatible with init call
+exports.init = initWebpack;
 
 exports.onWebpackInit = function (cb) {
   if (initializedWebpack5 || initializedWebpack4) cb()
