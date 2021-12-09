@@ -736,13 +736,42 @@ export async function ncc_workbox_webpack_plugin(task, opts) {
     .target('deps/workbox-webpack-plugin');
 }
 
-export async function ncc_url(task) {
+export async function ncc_querystring(task, opts) {
   await task
     .source(
-      relative(__dirname, require.resolve('url/url'))
+      opts.src || relative(__dirname, require.resolve('querystring/index.js'))
     )
-    .ncc({ packageName: 'url', externals })
-    .target('deps/url');
+    .ncc({ packageName: 'querystring' })
+    .target('deps/querystring');
+}
+
+export async function ncc_punycode(task, opts) {
+  await task
+    .source(
+      opts.src || relative(__dirname, require.resolve('punycode/punycode.js'))
+    )
+    .ncc({ packageName: 'punycode' })
+    .target('deps/punycode');
+}
+
+export async function ncc_url() {
+  const packageFolder = dirname(getPackagePath('url/url.js'));
+  const paths = sync(['**/*'], { cwd: packageFolder, ignore: ['node_modules'] });
+  paths.forEach((filePath) => {
+    const sourcePath = join(packageFolder, filePath);
+    const fileContent = fs.readFileSync(sourcePath, 'utf8');
+    fs.ensureDirSync(join(__dirname, `deps/url/${dirname(filePath)}`));
+    const targetPath = join(__dirname, `deps/url/${filePath}`);
+    if (extname(filePath) === '.js') {
+      fs.writeFileSync(targetPath, ['punycode', 'querystring'].reduce((acc, curr) => {
+        return acc
+          // cjs
+          .replace(`require('${curr}')`, `require('${`@builder/pack/deps/${curr}`}')`)
+      }, fileContent))
+    } else {
+      fs.copyFileSync(sourcePath, targetPath);
+    }
+  });
 }
 
 export async function ncc_webpack_dev_server(task, opts) {
@@ -752,7 +781,7 @@ export async function ncc_webpack_dev_server(task, opts) {
   // 'ansi-html-community', 'html-entities' 为 client 依赖，非 cjs 模块不进行打包
   // 'schema-utils' 依赖的版本为 4
   const dependenciesKey = Object.keys(packageJson.dependencies)
-    .filter(key => !['schema-utils', 'ansi-html-community', 'html-entities'].includes(key));
+    .filter(key => !['schema-utils', 'ansi-html-community', 'html-entities', 'url'].includes(key));
   const taskNames = dependenciesKey.filter((package) => {
     return !externals[package];
   });
@@ -853,6 +882,8 @@ export async function ncc(task) {
       'ncc_webpack_bundle4',
       'ncc_webpack_bundle5',
       'ncc_webpack_bundle_packages',
+      'ncc_querystring',
+      'ncc_punycode',
       'ncc_url',
       'ncc_babel_loader',
       'ncc_raw_loader',
