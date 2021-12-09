@@ -1,6 +1,7 @@
 // inspired by https://github.com/vercel/next.js/blob/canary/packages/next/taskfile.js
 const fs = require('fs-extra');
-const { relative, basename, resolve, dirname, join } = require('path')
+const { relative, basename, resolve, dirname, extname, join, default: path } = require('path')
+const { sync } = require('globby');
 const { Module } = require('module')
 const getPackagePath = require('./scripts/getPackagePath');
 
@@ -366,6 +367,10 @@ export async function ncc_react_refresh_webpack_plugin() {
   fs.copySync(join(__dirname, 'bundled/@pmmmwh/react-refresh-webpack-plugin'), join(__dirname, 'deps/@pmmmwh/react-refresh-webpack-plugin'));
 }
 
+export async function ncc_speed_measure_webpack_plugin() {
+  fs.copySync(join(__dirname, 'bundled/speed-measure-webpack-plugin'), join(__dirname, 'deps/speed-measure-webpack-plugin'));
+}
+
 externals['css-minimizer-webpack-plugin'] = '@builder/pack/deps/css-minimizer-webpack-plugin';
 export async function ncc_css_minimizer_webpack_plugin(task, opts) {
   await task
@@ -420,6 +425,18 @@ externals['html-webpack-plugin'] = '@builder/pack/deps/html-webpack-plugin';
 
 export async function ncc_html_webpack_plugin() {
   fs.copySync(join(__dirname, 'bundled/html-webpack-plugin'), join(__dirname, 'deps/html-webpack-plugin'));
+}
+
+externals['add-asset-html-webpack-plugin'] = '@builder/pack/deps/add-asset-html-webpack-plugin';
+export async function ncc_add_asset_html_webpack_plugin(task, opts) {
+  await task
+    .source(
+      opts.src || relative(__dirname, require.resolve('add-asset-html-webpack-plugin'))
+    )
+    .ncc({ packageName: 'add-asset-html-webpack-plugin', externals: {
+      ...externals,
+    }})
+    .target('deps/add-asset-html-webpack-plugin');
 }
 
 externals['add-asset-html-webpack-plugin'] = '@builder/pack/deps/add-asset-html-webpack-plugin';
@@ -612,6 +629,19 @@ export async function ncc_schema_utils3(task, opts) {
     .target('deps/schema-utils3')
 }
 
+externals['schema-utils4'] = '@builder/pack/deps/schema-utils4'
+export async function ncc_schema_utils4(task, opts) {
+  await task
+    .source(
+      opts.src || relative(__dirname, bundleRequire.resolve('schema-utils4'))
+    )
+    .ncc({
+      packageName: 'schema-utils4',
+      externals,
+    })
+    .target('deps/schema-utils4')
+}
+
 export async function ncc_webpack_bundle5(task, opts) {
   await task
     .source(opts.src || 'bundles/webpack/bundle5.js')
@@ -640,6 +670,160 @@ export async function ncc_babel_loader(task, opts) {
     )
     .ncc({ packageName: 'babel-loader', externals })
     .target('deps/babel-loader');
+}
+
+externals['raw-loader'] = '@builder/pack/deps/raw-loader';
+export async function ncc_raw_loader(task, opts) {
+  await task
+    .source(
+      opts.src || relative(__dirname, require.resolve('raw-loader'))
+    )
+    .ncc({ packageName: 'raw-loader', externals: {
+      ...externals,
+      'schema-utils': '@builder/pack/deps/schema-utils3',
+    }})
+    .target('deps/raw-loader');
+}
+
+externals['worker-loader'] = '@builder/pack/deps/worker-loader';
+export async function ncc_worker_loader(task, opts) {
+  await task
+    .source(
+      opts.src || 'bundles/worker-loader.js'
+    )
+    .ncc({ packageName: 'worker-loader', externals: {
+      ...externals,
+      'schema-utils': '@builder/pack/deps/schema-utils3',
+      'webpack/package.json': 'webpack/package.json',
+      'webpack/lib/node/NodeTargetPlugin': 'webpack/lib/node/NodeTargetPlugin',
+      'webpack/lib/SingleEntryPlugin': 'webpack/lib/SingleEntryPlugin',
+      'webpack/lib/webworker/WebWorkerTemplatePlugin': 'webpack/lib/webworker/WebWorkerTemplatePlugin',
+      'webpack/lib/ExternalsPlugin': 'webpack/lib/ExternalsPlugin',
+      'webpack/lib/web/FetchCompileWasmPlugin': 'webpack/lib/web/FetchCompileWasmPlugin',
+      'webpack/lib/web/FetchCompileAsyncWasmPlugin': 'webpack/lib/web/FetchCompileAsyncWasmPlugin',
+      'webpack/lib/web/FetchCompileWasmTemplatePlugin': 'webpack/lib/web/FetchCompileWasmTemplatePlugin',
+    }})
+    .target('deps/worker-loader');
+}
+
+externals['url-loader'] = '@builder/pack/deps/url-loader';
+export async function ncc_url_loader(task, opts) {
+  await task
+    .source(
+      opts.src || relative(__dirname, require.resolve('url-loader'))
+    )
+    .ncc({ packageName: 'url-loader', externals: {
+      ...externals,
+      'schema-utils': '@builder/pack/deps/schema-utils3',
+    } })
+    .target('deps/url-loader');
+}
+
+export async function ncc_workbox_window() {
+  // workbox-window 已包含单文件产物，拷贝 build 产物即可
+  const packagePath = getPackagePath('workbox-window');
+  const packageFolder = dirname(getPackagePath('workbox-window'));
+  fs.copySync(packagePath, join(__dirname, 'deps/workbox-window/package.json'));
+  fs.copySync(join(packageFolder, 'build'), join(__dirname, 'deps/workbox-window/build'));
+}
+
+export async function ncc_workbox_webpack_plugin(task, opts) {
+  await task
+    .source(
+      opts.src || relative(__dirname, require.resolve('workbox-webpack-plugin'))
+    )
+    .ncc({ packageName: 'workbox-webpack-plugin', externals })
+    .target('deps/workbox-webpack-plugin');
+}
+
+export async function ncc_querystring(task, opts) {
+  await task
+    .source(
+      opts.src || relative(__dirname, require.resolve('querystring/index.js'))
+    )
+    .ncc({ packageName: 'querystring' })
+    .target('deps/querystring');
+}
+
+export async function ncc_punycode(task, opts) {
+  await task
+    .source(
+      opts.src || relative(__dirname, require.resolve('punycode/punycode.js'))
+    )
+    .ncc({ packageName: 'punycode' })
+    .target('deps/punycode');
+}
+
+export async function ncc_url() {
+  const packageFolder = dirname(getPackagePath('url/url.js'));
+  const paths = sync(['**/*'], { cwd: packageFolder, ignore: ['node_modules'] });
+  paths.forEach((filePath) => {
+    const sourcePath = join(packageFolder, filePath);
+    const fileContent = fs.readFileSync(sourcePath, 'utf8');
+    fs.ensureDirSync(join(__dirname, `deps/url/${dirname(filePath)}`));
+    const targetPath = join(__dirname, `deps/url/${filePath}`);
+    if (extname(filePath) === '.js') {
+      fs.writeFileSync(targetPath, ['punycode', 'querystring'].reduce((acc, curr) => {
+        return acc
+          // cjs
+          .replace(`require('${curr}')`, `require('${`@builder/pack/deps/${curr}`}')`)
+      }, fileContent))
+    } else {
+      fs.copyFileSync(sourcePath, targetPath);
+    }
+  });
+}
+
+export async function ncc_webpack_dev_server(task, opts) {
+  // pre bundle dependencies of webpack-dev-server
+  const packageFolder = dirname(getPackagePath('webpack-dev-server'));
+  const packageJson = fs.readJSONSync(join(packageFolder, 'package.json'));
+  // 'ansi-html-community', 'html-entities' 为 client 依赖，非 cjs 模块不进行打包
+  // 'schema-utils' 依赖的版本为 4
+  const dependenciesKey = Object.keys(packageJson.dependencies)
+    .filter(key => !['schema-utils', 'ansi-html-community', 'html-entities', 'url'].includes(key));
+  const taskNames = dependenciesKey.filter((package) => {
+    return !externals[package];
+  });
+
+  for (let i = 0; i < taskNames.length; i ++) {
+    await task
+    .source(relative(__dirname, require.resolve(taskNames[i], {paths: [packageFolder]})))
+    .ncc({ packageName: taskNames[i], externals: {
+      ...externals,
+    } })
+    .target(`deps/${taskNames[i]}`);
+  }
+  const paths = sync(['**/*'], { cwd: packageFolder, ignore: ['node_modules'] });
+  paths.forEach((filePath) => {
+    const sourcePath = join(packageFolder, filePath);
+    const fileContent = fs.readFileSync(sourcePath, 'utf8');
+    fs.ensureDirSync(join(__dirname, `deps/webpack-dev-server/${dirname(filePath)}`));
+    const targetPath = join(__dirname, `deps/webpack-dev-server/${filePath}`);
+    if (extname(filePath) === '.js') {
+      fs.writeFileSync(targetPath, dependenciesKey.reduce((acc, curr) => {
+        return acc
+          // cjs
+          .replace(`require("${curr}")`, `require("${externals[curr] || `@builder/pack/deps/${curr}`}")`)
+          // esm
+          .replace(`from "${curr}"`, `from "${externals[curr] || `@builder/pack/deps/${curr}`}"`);
+      }, fileContent).replace('require("schema-utils")', 'require("@builder/pack/deps/schema-utils4")'))
+    } else {
+      fs.copyFileSync(sourcePath, targetPath);
+    }
+  });
+}
+
+export async function ncc_webpack_bundle_packages(task, opts) {
+  await task
+    .source(opts.src || 'bundles/webpack/packages/*')
+    .target('deps/webpack/')
+}
+
+export async function ncc_webpack_bundle_hot(task, opts) {
+  await task
+    .source(opts.src || `${dirname(require.resolve('webpack/hot/dev-server'))}/*`)
+    .target('deps/webpack/hot/')
 }
 
 export async function ncc(task) {
@@ -689,6 +873,7 @@ export async function ncc(task) {
       'ncc_lodash',
       'ncc_less_loader',
       'ncc_schema_utils3',
+      'ncc_schema_utils4',
       'ncc_serialize_javascript',
       'ncc_webpack_chain',
       'ncc_webpack_sources',
@@ -697,25 +882,22 @@ export async function ncc(task) {
       'ncc_webpack_bundle4',
       'ncc_webpack_bundle5',
       'ncc_webpack_bundle_packages',
+      'ncc_querystring',
+      'ncc_punycode',
+      'ncc_url',
       'ncc_babel_loader',
-      'ncc_esbuild_loader',
+      'ncc_raw_loader',
+      'ncc_url_loader',
+      'ncc_worker_loader',
+      'ncc_workbox_window',
+      'ncc_workbox_webpack_plugin',
       'ncc_react_refresh_webpack_plugin',
+      'ncc_speed_measure_webpack_plugin',
       'ncc_mini_css_extract_plugin',
       // 'ncc_fork_ts_checker_webpack_plugin_bundle',
       // 'ncc_fork_ts_checker_webpack_plugin_bundle_package',
     ]);
-}
-
-export async function ncc_webpack_bundle_packages(task, opts) {
-  await task
-    .source(opts.src || 'bundles/webpack/packages/*')
-    .target('deps/webpack/')
-}
-
-export async function ncc_webpack_bundle_hot(task, opts) {
-  await task
-    .source(opts.src || `${dirname(require.resolve('webpack/hot/dev-server'))}/*`)
-    .target('deps/webpack/hot/')
+  await task.parallel(['ncc_webpack_dev_server']);
 }
 
 export default async function (task) {
