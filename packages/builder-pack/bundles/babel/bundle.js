@@ -74,7 +74,7 @@ function pluginTransformRuntime() {
 
 
 function pluginTransformTypeScript() {
-  return require('plugin-transform-typescript')
+  return require('@babel/plugin-transform-typescript')
 }
 
 function pluginProposalClassProperties() {
