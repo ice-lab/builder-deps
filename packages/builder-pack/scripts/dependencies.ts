@@ -23,6 +23,7 @@ export default [
   '@babel/plugin-proposal-pipeline-operator',
   '@babel/plugin-proposal-throw-expressions',
   '@babel/plugin-syntax-dynamic-import',
+  '@babel/plugin-transform-typescript',
   '@babel/plugin-syntax-import-meta',
   '@babel/plugin-transform-runtime',
   // basic dependencies

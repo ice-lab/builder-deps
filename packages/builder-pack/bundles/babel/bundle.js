@@ -72,6 +72,11 @@ function pluginTransformRuntime() {
   return require('@babel/plugin-transform-runtime')
 }
 
+
+function pluginTransformTypeScript() {
+  return require('plugin-transform-typescript')
+}
+
 function pluginProposalClassProperties() {
   return require('@babel/plugin-proposal-class-properties')
 }
@@ -134,6 +139,7 @@ module.exports = {
   pluginProposalNumericSeparator,
   pluginSyntaxDynamicImport,
   pluginTransformRuntime,
+  pluginTransformTypeScript,
   presetEnv,
   presetReact,
   presetTypescript,

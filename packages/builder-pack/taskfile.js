@@ -124,6 +124,7 @@ const babelBundlePackages = {
   '@babel/preset-env': '@builder/pack/deps/@babel/preset-env',
   '@babel/preset-react': '@builder/pack/deps/@babel/preset-react',
   '@babel/preset-typescript': '@builder/pack/deps/@babel/preset-typescript',
+  '@babel/plugin-transform-typescript': "@builder/pack/deps/@babel/plugin-transform-typescript",
 }
 
 Object.assign(externals, babelBundlePackages);
