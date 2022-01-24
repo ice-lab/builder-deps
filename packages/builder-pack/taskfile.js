@@ -736,44 +736,6 @@ export async function ncc_workbox_webpack_plugin(task, opts) {
     .target('deps/workbox-webpack-plugin');
 }
 
-export async function ncc_querystring(task, opts) {
-  await task
-    .source(
-      opts.src || relative(__dirname, require.resolve('querystring/index.js'))
-    )
-    .ncc({ packageName: 'querystring' })
-    .target('deps/querystring');
-}
-
-export async function ncc_punycode(task, opts) {
-  await task
-    .source(
-      opts.src || relative(__dirname, require.resolve('punycode/punycode.js'))
-    )
-    .ncc({ packageName: 'punycode' })
-    .target('deps/punycode');
-}
-
-export async function ncc_url() {
-  const packageFolder = dirname(getPackagePath('url/url.js'));
-  const paths = sync(['**/*'], { cwd: packageFolder, ignore: ['node_modules'] });
-  paths.forEach((filePath) => {
-    const sourcePath = join(packageFolder, filePath);
-    const fileContent = fs.readFileSync(sourcePath, 'utf8');
-    fs.ensureDirSync(join(__dirname, `deps/url/${dirname(filePath)}`));
-    const targetPath = join(__dirname, `deps/url/${filePath}`);
-    if (extname(filePath) === '.js') {
-      fs.writeFileSync(targetPath, ['punycode', 'querystring'].reduce((acc, curr) => {
-        return acc
-          // cjs
-          .replace(`require('${curr}')`, `require('${`@builder/pack/deps/${curr}`}')`)
-      }, fileContent))
-    } else {
-      fs.copyFileSync(sourcePath, targetPath);
-    }
-  });
-}
-
 export async function ncc_webpack_dev_server(task, opts) {
   // pre bundle dependencies of webpack-dev-server
   const packageFolder = dirname(getPackagePath('webpack-dev-server'));
@@ -781,7 +743,7 @@ export async function ncc_webpack_dev_server(task, opts) {
   // 'ansi-html-community', 'html-entities' 为 client 依赖，非 cjs 模块不进行打包
   // 'schema-utils' 依赖的版本为 4
   const dependenciesKey = Object.keys(packageJson.dependencies)
-    .filter(key => !['schema-utils', 'ansi-html-community', 'html-entities', 'url'].includes(key));
+    .filter(key => !['schema-utils', 'ansi-html-community', 'html-entities'].includes(key) && !key.startsWith('@types/'));
   const taskNames = dependenciesKey.filter((package) => {
     return !externals[package];
   });
@@ -810,6 +772,37 @@ export async function ncc_webpack_dev_server(task, opts) {
       }, fileContent).replace('require("schema-utils")', 'require("@builder/pack/deps/schema-utils4")'))
     } else {
       fs.copyFileSync(sourcePath, targetPath);
+    }
+  });
+}
+
+export async function ncc_open(task, opts) {
+  await task
+    .source(
+      opts.src || relative(__dirname, require.resolve('open'))
+    )
+    .target('deps/open');
+}
+
+export async function ncc_cross_spawn(task, opts) {
+  await task
+    .source(opts.src || relative(__dirname, require.resolve('cross-spawn')))
+    .ncc({ packageName: 'cross-spawn', externals })
+    .target('deps/cross-spawn')
+}
+
+export async function ncc_react_dev_utils() {
+  const packageFolder = dirname(getPackagePath('react-dev-utils/package.json'));
+  const targetFolder = join(__dirname, 'deps/react-dev-utils');
+  fs.ensureDirSync(targetFolder);
+  ['formatWebpackMessages.js', 'openBrowser.js'].forEach((fileName) => {
+    if (fileName.includes('openBrowser')) {
+      const fileContent = fs.readFileSync(join(packageFolder, fileName), 'utf-8');
+      fs.writeFileSync(join(targetFolder, fileName), fileContent
+        .replace('require(\'open\')', 'require(\'@builder/pack/deps/open\')')
+        .replace('require(\'cross-spawn\')', 'require(\'@builder/pack/deps/cross-spawn\')'))
+    } else {
+      fs.copyFileSync(join(packageFolder, fileName), join(targetFolder, fileName));
     }
   });
 }
@@ -882,9 +875,9 @@ export async function ncc(task) {
       'ncc_webpack_bundle4',
       'ncc_webpack_bundle5',
       'ncc_webpack_bundle_packages',
-      'ncc_querystring',
-      'ncc_punycode',
-      'ncc_url',
+      'ncc_open',
+      'ncc_cross_spawn',
+      'ncc_react_dev_utils',
       'ncc_babel_loader',
       'ncc_raw_loader',
       'ncc_url_loader',
