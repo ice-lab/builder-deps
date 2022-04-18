@@ -1,5 +1,5 @@
 # Changelog
 
-## v0.2.0
+## v1.0.0
 
-- [feat] update `postcss-loader` to v4.3.0 in `rax-pack`
+- [feat] update `postcss-loader` to v4.3.0
