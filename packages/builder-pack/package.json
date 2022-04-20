@@ -1,6 +1,6 @@
 {
   "name": "@builder/pack",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "license": "MIT",
   "author": "ICE",
   "description": "basic dependencies",
@@ -19,20 +19,21 @@
   },
   "dependencies": {
     "ansi-html": "^0.0.7",
-    "core-js-pure": "^3.8.1",
-    "chokidar": "3.5.2",
-    "error-stack-parser": "^2.0.6",
     "ansi-html-community": "^0.0.8",
+    "chokidar": "3.5.2",
+    "core-js-pure": "^3.8.1",
+    "error-stack-parser": "^2.0.6",
     "html-entities": "^2.1.0",
     "jest-worker": "27.0.6",
+    "react-refresh": "^0.10.0",
     "workbox-background-sync": "6.4.2",
     "workbox-broadcast-update": "6.4.2",
     "workbox-cacheable-response": "6.4.2",
     "workbox-expiration": "6.4.2",
     "workbox-precaching": "6.4.2",
     "workbox-range-requests": "6.4.2",
-    "workbox-strategies": "6.4.2",
-    "workbox-routing": "6.4.2"
+    "workbox-routing": "6.4.2",
+    "workbox-strategies": "6.4.2"
   },
   "devDependencies": {
     "@babel/core": "7.15.8",
