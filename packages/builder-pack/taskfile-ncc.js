@@ -25,6 +25,7 @@ module.exports = function (task) {
     const outputDir = options.dir || '';
     return ncc(join(__dirname, file.dir, file.base), {
       filename: file.base,
+      cache: false,
       minify: options.minify === false ? false : true,
       ...options,
     }).then(({ code, assets }) => {

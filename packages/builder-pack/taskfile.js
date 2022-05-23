@@ -314,7 +314,7 @@ export async function ncc_lodash(task, opts) {
     .target('deps/lodash');
 }
 
-externals['css-declaration-sorter'] = '@builder/pack/deps/css-declaration-sorter';
+// externals['css-declaration-sorter'] = '@builder/pack/deps/css-declaration-sorter';
 export async function ncc_css_declaration_sorter(task, opts) {
   const dir = 'lib';
   await task
@@ -849,7 +849,7 @@ export async function ncc(task) {
       'ncc_webpack_simple_progress_plugin',
       'ncc_ejs',
       'ncc_css_minimizer_webpack_plugin',
-      'ncc_css_declaration_sorter',
+      // 'ncc_css_declaration_sorter',
       'ncc_html_webpack_plugin',
       'ncc_add_asset_html_webpack_plugin',
       'ncc_webpack_bundle_analyzer',
@@ -886,10 +886,10 @@ export async function ncc(task) {
       'ncc_workbox_webpack_plugin',
       'ncc_react_refresh_webpack_plugin',
       'ncc_speed_measure_webpack_plugin',
-      'ncc_mini_css_extract_plugin',
       // 'ncc_fork_ts_checker_webpack_plugin_bundle',
       // 'ncc_fork_ts_checker_webpack_plugin_bundle_package',
     ]);
+  await task.parallel(['ncc_mini_css_extract_plugin']);
   await task.parallel(['ncc_webpack_dev_server']);
 }
 
