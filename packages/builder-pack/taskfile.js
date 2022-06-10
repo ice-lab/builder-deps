@@ -294,6 +294,16 @@ export async function ncc_sass_loader(task, opts) {
     .target('deps/sass-loader');
 }
 
+externals['resolve-url-loader'] = '@builder/pack/deps/resolve-url-loader';
+export async function ncc_resolve_url_loader(task, opts) {
+  await task
+    .source(
+      opts.src || relative(__dirname, require.resolve('resolve-url-loader'))
+    )
+    .ncc({ packageName: 'resolve-url-loader', externals: { ...externals, postcss: 'postcss' } })
+    .target('deps/resolve-url-loader');
+}
+
 // externals['loader-utils'] = '@builder/pack/deps/loader-utils';
 export async function ncc_loader_utils(task, opts) {
   await task
@@ -855,6 +865,7 @@ export async function ncc(task) {
       'ncc_webpack_bundle_analyzer',
       'ncc_esbuild_loader',
       'ncc_sass_loader',
+      'ncc_resolve_url_loader',
       'ncc_postcss_loader',
       'ncc_postcss_preset_env',
       'ncc_postcss_safe_parser',
