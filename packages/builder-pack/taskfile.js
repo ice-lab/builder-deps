@@ -99,20 +99,9 @@ export async function ncc_html_minifier_terser(task, opts) {
     .target('deps/html-minifier-terser');
 }
 
-export async function ncc_resolve_uri(task, opts) {
-  await task
-    .source(
-      opts.src || relative(__dirname, require.resolve('@jridgewell/resolve-uri'))
-    )
-    .ncc({ packageName: '@jridgewell/resolve-uri', externals })
-    .target('deps/@jridgewell/resolve-uri');
-}
 
 export async function ncc_babel_bundle(task, opts) {
-  const bundleExternals = {
-    ...externals,
-    '@jridgewell/resolve-uri': '@builder/pack/deps/@jridgewell/resolve-uri'
-  }
+  const bundleExternals = { ...externals }
   for (const pkg of Object.keys(babelBundlePackages))
     delete bundleExternals[pkg]
   await task
@@ -849,7 +838,6 @@ export async function ncc(task) {
       'ncc_pretty_error',
       'ncc_tapable',
       'ncc_html_minifier_terser',
-      'ncc_resolve_uri',
       'ncc_babel_bundle',
       'ncc_babel_bundle_packages',
       'ncc_body_parser',
