@@ -6,7 +6,7 @@
     "worker-loader": "3.0.8"
   },
   "resolutions": {
-    "browserslist": "4.17.4",
-    "caniuse-lite": "1.0.30001269"
+    "browserslist": "4.21.4",
+    "caniuse-lite": "1.0.30001434"
   }
 }
