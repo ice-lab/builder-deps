@@ -25,6 +25,7 @@ bundleRequire.resolve = (request, options) =>
 const externals = {
   chalk: 'chalk',
   'node-fetch': 'node-fetch',
+  'caniuse-lite': 'caniuse-lite',
   // postcss: 'postcss',
 
   // webpack

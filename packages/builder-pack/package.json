@@ -1,6 +1,6 @@
 {
   "name": "@builder/pack",
-  "version": "0.6.5",
+  "version": "0.6.6",
   "license": "MIT",
   "author": "ICE",
   "description": "basic dependencies",
@@ -20,6 +20,7 @@
   "dependencies": {
     "ansi-html": "^0.0.7",
     "ansi-html-community": "^0.0.8",
+    "caniuse-lite": "^1.0.30001434",
     "chokidar": "3.5.2",
     "core-js-pure": "^3.8.1",
     "error-stack-parser": "^2.0.6",
