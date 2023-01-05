@@ -1,6 +1,6 @@
 {
   "name": "@builder/pack",
-  "version": "0.6.6",
+  "version": "0.6.7",
   "license": "MIT",
   "author": "ICE",
   "description": "basic dependencies",
@@ -26,6 +26,7 @@
     "error-stack-parser": "^2.0.6",
     "html-entities": "^2.1.0",
     "jest-worker": "27.0.6",
+    "postcss": "^8.0.0",
     "react-refresh": "^0.10.0",
     "workbox-background-sync": "6.4.2",
     "workbox-broadcast-update": "6.4.2",

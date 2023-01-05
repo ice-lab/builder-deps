@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.6.7
+
+- fix: add dependency of `postcss`
+
 ## 0.6.6
 
 - fix: add `caniuse-lite` as dependencies.
